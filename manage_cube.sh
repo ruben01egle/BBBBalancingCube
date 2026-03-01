@@ -106,7 +106,7 @@ run_debug_bbb() {
         exit 1
     fi
     # shellcheck disable=SC2029
-    ssh -p "${PORT}" "$USERNAME"@"$HOSTNAME" "sudo -n ${HOMEDIR}${APPNAME}"
+    ssh -t -p "${PORT}" "$USERNAME"@"$HOSTNAME" "sudo -n ${HOMEDIR}${APPNAME}"
 }
 
 run_release_native() {
@@ -129,7 +129,7 @@ run_release_bbb() {
         exit 1
     fi
     # shellcheck disable=SC2029
-    ssh -p "${PORT}" "$USERNAME"@"$HOSTNAME" "sudo -n ${HOMEDIR}${APPNAME}"
+    ssh -t -p "${PORT}" "$USERNAME"@"$HOSTNAME" "sudo -n ${HOMEDIR}${APPNAME}"
 }
 
 clean() {

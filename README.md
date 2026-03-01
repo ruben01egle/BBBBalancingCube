@@ -99,7 +99,7 @@ Close the connection:
 ./connect_cube.sh stop groupX
 ```
 
-Open a browser and acces the page `localhost:42000` to turn on the power for the BBB.
+Open a browser and acces the page [localhost:42000](http://localhost:42000/) to turn on the power for the BBB.
 
 Now you can reach the BBB with SSH:
 ```bash
