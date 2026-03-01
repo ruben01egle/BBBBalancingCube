@@ -34,6 +34,7 @@ int main(){
 	
 	char in;
     cin >> in;
+	runvar.store(false);
 
 	ControlThread.join();
 	myContainer.signalReader();

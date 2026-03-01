@@ -24,7 +24,7 @@ void CStateEstimation::estimateState(const uint16_t &pADCVal, const CIMUData &pI
     float dotPhiImu2 = mCalibration.mImu2GyroScale*static_cast<float>(pImu2Data.mDotPhi) + mCalibration.mImu2GyroOffset;
 
     pStateData.mDotPhi = (dotPhiImu1 + dotPhiImu2)/2;
-    pStateData.mPhi_A = atan2(dDotXImu1 - IMU_ALPHA*dDotXImu2, dDotYImu1 - IMU_ALPHA*dDotYImu2);
+    pStateData.mPhi_A = -atan2(dDotXImu1 - IMU_ALPHA*dDotXImu2, dDotYImu1 - IMU_ALPHA*dDotYImu2);
     pStateData.mPhi_G += pStateData.mDotPhi*mTa;
     pStateData.mPhi_C = ALPHA*(pStateData.mPhi_C + mTa*pStateData.mDotPhi) + (1-ALPHA)*pStateData.mPhi_A;
     pStateData.mDotPsi = mCalibration.mADCScale*static_cast<float>(pADCVal) + mCalibration.mADCOffset;

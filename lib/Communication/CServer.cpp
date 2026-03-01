@@ -37,7 +37,7 @@ bool CServer::transmitMessage(CContent& content)
 bool CServer::init()
 {
 	mSocketFD = socket(AF_INET, SOCK_STREAM, 0);
-	if (mSocketFD <= 0) {
+	if (mSocketFD < 0) {
 		REPORT_ERROR_ERRNO("Failed to open socket");
 	}
 
@@ -53,13 +53,13 @@ bool CServer::init()
 	int32_t retVal = bind(mSocketFD,
 						reinterpret_cast<struct sockaddr*>(&server_addr),
 						sizeof(server_addr));
-	if (retVal <= 0) {
+	if (retVal < 0) {
 		REPORT_ERROR_ERRNO("Failed to bind the socket");
 		return false;
 	}
 
 	retVal = listen(mSocketFD, 1);
-	if (retVal <= 0) {
+	if (retVal < 0) {
 		REPORT_ERROR_ERRNO("Failed to listen()");
 		return false;
 	}
@@ -75,8 +75,10 @@ bool CServer::waitForClient(size_t pTimeout)
 	mConnectedSocketFD = accept(mSocketFD,
 					   	   	    reinterpret_cast<struct sockaddr*>(&mClientAddr),
 								&mClientLen);
-	if (mConnectedSocketFD <= 0) {
-		REPORT_ERROR_ERRNO("Failed to accept the client connection");
+	if (mConnectedSocketFD < 0) {
+		if (errno != EAGAIN && errno != EWOULDBLOCK) {
+            REPORT_ERROR_ERRNO("Failed to accept the client connection");
+        }
 		return false;
 	}
 	return true;
@@ -92,17 +94,17 @@ CServer::CServer() : mSocketFD(-1),
 CServer::~CServer()
 {
 	int32_t retVal = shutdown(mConnectedSocketFD, SHUT_RDWR);
-	if (retVal <= 0) {
+	if (retVal < 0) {
 		REPORT_ERROR_ERRNO("Failed to shutdown socket");
 	}
 
 	retVal = close(mConnectedSocketFD);
-	if (retVal <= 0) {
+	if (retVal < 0) {
 		REPORT_ERROR_ERRNO("Failed to close connected socket");
 	}
 
 	retVal = close(mSocketFD);
-	if (retVal <= 0) {
+	if (retVal < 0) {
 		REPORT_ERROR_ERRNO("Failed to close socket");
 	}
 }
