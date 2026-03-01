@@ -26,6 +26,24 @@ void CContainer::signalReader()
 {
 	mReadSem.give();
 }
+
+bool CContainer::writeData(const int64_t timeUs, 
+                              const uint16_t adcValue, 
+                              const float torque, 
+                              const CIMUData& sensor1, 
+                              const CIMUData& sensor2, 
+                              const CStateVectorData& stateData)
+{
+    mContent.mTimeUs       = timeUs;
+    mContent.mADCValue     = adcValue;
+    mContent.mMotorTorque  = torque;
+    mContent.mSensor1Data  = sensor1;
+    mContent.mSensor2Data  = sensor2;
+    mContent.mStateData    = stateData;
+
+    return true;
+}
+
 bool CContainer::writeTime(const int64_t timeUs)
 {
 	mContent.mTimeUs = timeUs;

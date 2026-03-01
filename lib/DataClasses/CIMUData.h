@@ -25,9 +25,9 @@ public:
 		{
 			int16_t mPadding1;
 			int16_t mPadding2;
-			int16_t mPhi_d;		//! Sensor  Z-Angular Velocity []
-			int16_t mX_dd;		//! Sensor  X-Acceleration []
-			int16_t mY_dd;		//! Sensor  Y-Acceleration []
+			int16_t mDotPhi;		//! Sensor  Z-Angular Velocity []
+			int16_t mDDotX;		//! Sensor  X-Acceleration []
+			int16_t mDDotY;		//! Sensor  Y-Acceleration []
 			int16_t mPadding3;
 		};
 	};

@@ -1,4 +1,5 @@
 #include <cstdint>
+#include <array>
 
 #include "CCalibration.h"
 
@@ -8,7 +9,9 @@ namespace Cube
     constexpr float T_A = 0.02;
     constexpr float IMU_R1 = 0.14;
     constexpr float IMU_R2 = 0.061;
+    constexpr float IMU_ALPHA = IMU_R1/IMU_R2;
     constexpr float ALPHA = 0.98;
+    constexpr float MAX_TM = 0.5;
 
     constexpr CCalibration DEFAULT_CALIBRATION = {
         // IMU 1
@@ -29,11 +32,13 @@ namespace Cube
 
         // ADC
         .mADCScale         = 1.0,
-        .mADCOffset        = 0.0
+        .mADCOffset        = 0.0,
+
+        .mPhiOffset        = 0.0
     };
 
-    const uint8_t CUBE = 5;
-    constexpr float K[] = {-2.1431F, -0.2186F, -0.0013F};
+    constexpr uint8_t CUBE = 5;
+    constexpr std::array<float, 3> K = {-2.1431F, -0.2186F, -0.0013F};
     static constexpr CCalibration ALL_CUBES[] = {
         // Index 0 = Cube 1
         {
@@ -148,4 +153,5 @@ namespace Cube
             .mADCScale = 0.076f, .mADCOffset = -155.0f, .mPhiOffset = 0.04f
         }
     };
+    constexpr auto CUBE_CONFIG = ALL_CUBES[CUBE - 1];
 }

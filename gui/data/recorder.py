@@ -22,12 +22,12 @@ def extract_state_data(msg: CContent):
         return []
     state = msg.mStateData
     return [
-        state.mPhi_A, state.mPhi_G, state.mPhi_C, state.mPhi_d, state.mPsi_d,
+        state.mPhi_A, state.mPhi_G, state.mPhi_C, state.mDotPhi, state.mDotPsi,
         msg.mMotorTorque   # Motormoment ans Ende
     ]
 
 def state_headers():
-    return ['mPhi_A', 'mPhi_G', 'mPhi_C', 'mPhi_d', 'mPsi_d', 'mMotorTorque']
+    return ['mPhi_A', 'mPhi_G', 'mPhi_C', 'mDotPhi', 'mDotPsi', 'mMotorTorque']
 
 class DataRecorder:
     def __init__(self, filename, mode: str):

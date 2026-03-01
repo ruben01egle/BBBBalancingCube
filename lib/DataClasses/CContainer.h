@@ -19,6 +19,13 @@ public:
 	bool getContent(bool waitForever,
 					CContent& content);
 	void signalReader();
+	bool writeData(const int64_t timeUs, 
+                              const uint16_t adcValue, 
+                              const float torque, 
+                              const CIMUData& sensor1, 
+                              const CIMUData& sensor2, 
+                              const CStateVectorData& stateData);
+
 	bool writeTime(const int64_t timeUs);
 	bool writeADCValue(const uint16_t adcValue);
 	bool writeTorqueValue(const float torque);

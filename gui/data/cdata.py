@@ -15,8 +15,8 @@ class CStateVectorData(ctypes.Structure):
         ("mPhi_A", ctypes.c_float),
         ("mPhi_G", ctypes.c_float),
         ("mPhi_C", ctypes.c_float),
-        ("mPhi_d", ctypes.c_float),
-        ("mPsi_d", ctypes.c_float),
+        ("mDotPhi", ctypes.c_float),
+        ("mDotPsi", ctypes.c_float),
     ]
 
 class CContent(ctypes.Structure):
