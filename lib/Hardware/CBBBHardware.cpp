@@ -21,7 +21,7 @@ CBBBHardware::CBBBHardware() : mSensor1("/dev/spidev2.0"), mSensor2("/dev/spidev
 	mSensor2.init(0b00011000U);
 
 }
-bool CBBBHardware::fetchValues(UInt16& adcValue,
+bool CBBBHardware::fetchValues(uint16_t& adcValue,
 		 CIMUData& sensor1Data,
 		 CIMUData& sensor2Data)
 {
@@ -48,15 +48,5 @@ bool CBBBHardware::disableMotor()
 bool CBBBHardware::setTorque(float torque)
 {
 	mMotor.setTorque(torque);
-	return true;
-}
-bool CBBBHardware::openBrake()
-{
-	mMotor.enableMotor();
-	return true;
-}
-bool CBBBHardware::closeBrake()
-{
-	mMotor.disableMotor();
 	return true;
 }

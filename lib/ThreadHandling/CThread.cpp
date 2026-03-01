@@ -5,10 +5,12 @@
  * @brief	Method definitions for CThread.
  */
 #include "CThread.h"
-#include "Global.h"
-#include <iostream>
+#include <cstdint>
 #include <unistd.h>
 #include <cstdlib>
+
+#include "CErrorReporter.h"
+
 using namespace std;
 
 void* threadProc(void* thisPtr)
@@ -29,7 +31,7 @@ void CThread::start()
 	struct sched_param threadparam;
 	int max = sched_get_priority_max(SCHED_RR);
 	int min = sched_get_priority_min(SCHED_RR);
-	Int32 realPrio = min + (max - min)/(PRIORITY_REALTIME + 1)*mPrioBase;
+	int32_t realPrio = min + (max - min)/(PRIORITY_REALTIME + 1)*mPrioBase;
 
 	//Configure the scheduling policy as Round-Robin
 	pthread_attr_t attribute;
@@ -46,7 +48,7 @@ void CThread::start()
 	//Temrminate the application in case the creation of the thread failed
 	if(ret != 0)
 	{
-		std::cerr << "(CThread::start) pthread_create() failed! ret: " << ret << std::endl;
+		REPORT_ERROR("pthread_create() failed! ret: ", ret, " exiting...");
 		exit(-1);
 	}
 	//Cleanup
@@ -61,6 +63,4 @@ void CThread::join()
 {
 	pthread_join(mThreadID, NULL);
 }
-
-
 

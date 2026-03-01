@@ -8,26 +8,27 @@
  */
 #ifndef CCONTAINER_H
 #define CCONTAINER_H
-#include "SContent.h"
-#include "SStateVectorData.h"
+#include <cstdint>
+#include "CContent.h"
+#include "CStateVectorData.h"
 #include "CBinarySemaphore.h"
 
 class CContainer
 {
 public:
 	bool getContent(bool waitForever,
-					SContent& content);
+					CContent& content);
 	void signalReader();
-	bool writeTime(const Int64 timeUs);
-	bool writeADCValue(const UInt16 adcValue);
+	bool writeTime(const int64_t timeUs);
+	bool writeADCValue(const uint16_t adcValue);
 	bool writeTorqueValue(const float torque);
 	bool writeSensor1Data(const CIMUData& sensorData);
 	bool writeSensor2Data(const CIMUData& sensorData);
-	bool writeStateData(const SStateVectorData& sensorData);
+	bool writeStateData(const CStateVectorData& sensorData);
 public:
 	CContainer();
 private:
-	SContent mContent;
+	CContent mContent;
 	CBinarySemaphore mReadSem;
 };
 

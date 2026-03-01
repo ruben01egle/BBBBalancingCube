@@ -8,12 +8,12 @@
 #include "CIMUData.h"
 
 
-CContainer::CContainer() : mReadSem(false, false)
+CContainer::CContainer()
 {
-
+	mReadSem.init(false, false);
 }
 bool CContainer::getContent(bool waitForever,
-							SContent& content)
+							CContent& content)
 {
 	if(mReadSem.take(waitForever))
 	{
@@ -26,12 +26,12 @@ void CContainer::signalReader()
 {
 	mReadSem.give();
 }
-bool CContainer::writeTime(const Int64 timeUs)
+bool CContainer::writeTime(const int64_t timeUs)
 {
 	mContent.mTimeUs = timeUs;
 	return true;
 }
-bool CContainer::writeADCValue(const UInt16 adcValue)
+bool CContainer::writeADCValue(const uint16_t adcValue)
 {
 	mContent.mADCValue = adcValue;
 	return true;
@@ -51,7 +51,7 @@ bool CContainer::writeSensor2Data(const CIMUData& sensorData)
 	mContent.mSensor2Data = sensorData;
 	return true;
 }
-bool CContainer::writeStateData(const SStateVectorData& stateValue)
+bool CContainer::writeStateData(const CStateVectorData& stateValue)
 {
 	mContent.mStateData = stateValue;
 	return true;

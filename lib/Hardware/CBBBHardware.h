@@ -5,6 +5,7 @@
  */
 #ifndef CBBBHARDWARE_H
 #define CBBBHARDWARE_H
+#include <cstdint>
 #include "CADCMMap.h"
 #include "CMotor.h"
 #include "CMPU9250.h"
@@ -14,14 +15,13 @@
 class CBBBHardware
 {
 public:
-	bool fetchValues(UInt16& adcValue,
+	bool fetchValues(uint16_t& adcValue,
 					 CIMUData& sensor1Data,
 					 CIMUData& sensor2Data);
 	bool enableMotor();
 	bool disableMotor();
 	bool setTorque(float torque);
-	bool openBrake();
-	bool closeBrake();
+
 public:
 	CBBBHardware();
 private:

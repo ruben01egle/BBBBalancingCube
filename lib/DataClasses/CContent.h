@@ -3,21 +3,21 @@
  * @date	8.12.2016
  * @brief	Structure to hold all the content of the CContainer.
  */
-#ifndef SCONTENT_H
-#define SCONTENT_H
-#include "SStateVectorData.h"
-#include "Global.h"
+#ifndef CCONTENT_H
+#define CCONTENT_H
+#include "CStateVectorData.h"
 #include "CIMUData.h"
 
-struct SContent
+class CContent
 {
-	Int64 mTimeUs;
+public:
+	int64_t mTimeUs;
 	CIMUData mSensor1Data;
 	CIMUData mSensor2Data;
-	SStateVectorData mStateData;
+	CStateVectorData mStateData;
 	float mMotorTorque;
-	UInt16 mADCValue;
-	UInt16 mPadding;
+	uint16_t mADCValue;
+	uint16_t mPadding;
 };
 
 #endif

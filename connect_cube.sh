@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-WORKDIR="/tmp/msys_group5"
+WORKDIR="/tmp/msys"
 PIDS_FILE="$WORKDIR/pids.txt"
 mkdir -p "$WORKDIR"
 : > "$PIDS_FILE"

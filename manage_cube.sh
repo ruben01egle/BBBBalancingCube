@@ -3,7 +3,7 @@
 HOSTNAME="localhost"
 PORT="48000"
 USERNAME="root"
-HOMEDIR="/home/debian/"
+HOMEDIR="/home/"
 PROJECTNAME="BBBCube"
 APPNAME="${PROJECTNAME}_app"
 BUILD_DIR_DEBUG="debug"
@@ -164,10 +164,6 @@ sshkey2BBB() {
     ssh-copy-id -p "$PORT" "$USERNAME"@"$HOSTNAME"
 }
 
-if [ "$(basename "$(pwd)")" != "${PROJECTNAME}" ]; then
-    echo "Please run this script from the ${PROJECTNAME} directory"
-    exit 1
-fi
 
 if [ $# -eq 0 ]; then
     echo "No arguments found. Please chose an action."

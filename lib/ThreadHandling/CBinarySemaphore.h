@@ -6,21 +6,22 @@
  */
 #ifndef CBINARYSEMAPHORE_H
 #define CBINARYSEMAPHORE_H
-#include "Global.h"
+#include <cstdint>
 #include <pthread.h>
 
 class CBinarySemaphore
 {
 public:
+	bool init(bool pIsFull, bool pIsProcessShared);
 	bool take(bool waitForever);
 	void give();
 public:
-	CBinarySemaphore(bool isAvailable, bool isProcessShared);
+	CBinarySemaphore();
 	~CBinarySemaphore();
 private:
 	pthread_mutex_t mMutex;
 	pthread_cond_t mCondition;
-	Int32 mCounter;
+	int32_t mCounter;
 };
 
 #endif

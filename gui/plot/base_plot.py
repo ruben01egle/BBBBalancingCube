@@ -6,7 +6,7 @@ class BasePlot(ABC):
         self.plot_widget = plot_widget
 
     @abstractmethod
-    def update(self, scontent) -> None:
+    def update(self, ccontent) -> None:
         pass
 
     @abstractmethod

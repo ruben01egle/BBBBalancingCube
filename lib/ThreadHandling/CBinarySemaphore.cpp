@@ -5,45 +5,70 @@
  * @brief Method definitions for a binary semaphore, which is simulated using a mutex.
  */
 #include "CBinarySemaphore.h"
-#include "Assertion.h"
+#include "CErrorReporter.h"
 
-CBinarySemaphore::CBinarySemaphore(bool isAvailable, bool isProcessShared) : mCounter(1)
+CBinarySemaphore::CBinarySemaphore() : mCounter(1)
 {
-	Int32 retVal;
+}
+
+bool CBinarySemaphore::init(bool pIsFull, bool pIsProcessShared)
+{
+	int32_t retVal;
 	pthread_mutexattr_t mutexAttr;
 	retVal = pthread_mutexattr_init(&mutexAttr);
-	sAssertion(0 == retVal, "(CBinarySemaphore::CBinarySemaphore()) : Failed to init Mutex-Attribute!", true);
+	if (retVal != 0) {
+        REPORT_ERROR("Failed to init Mutex-Attribute, errno: ", retVal);
+		return false;
+    }
 
 	retVal = pthread_mutexattr_settype(&mutexAttr, PTHREAD_MUTEX_ERRORCHECK);
-	sAssertion(0 == retVal, "(CBinarySemaphore::CBinarySemaphore()) : Failed to set Mutex-Type!", true);
+	if (retVal != 0) {
+        REPORT_ERROR("Failed to set Mutex-Type, errno: ", retVal);
+		return false;
+    }
 
 	retVal = pthread_mutex_init(&mMutex, &mutexAttr);
-	sAssertion(0 == retVal, "(CBinarySemaphore::CBinarySemaphore()) : Failed to init Mutex!", true);
+	if (retVal != 0) {
+        REPORT_ERROR("Failed to init Mutex, errno: ", retVal);
+		return false;
+    }
 
 	retVal = pthread_mutexattr_destroy(&mutexAttr);
-	sAssertion(0 == retVal, "(CBinarySemaphore::CBinarySemaphore()) : Failed to destroy Mutex-Attribute!", true);
+	if (retVal != 0) {
+        REPORT_ERROR("Failed to destroy Mutex-Attribute, errno: ", retVal);
+		return false;
+    }
 
 	pthread_condattr_t conditionAttr;
 	retVal = pthread_condattr_init(&conditionAttr);
-	sAssertion(0 == retVal, "(CBinarySemaphore::CBinarySemaphore()) : Failed to init Condition-Attribute!", true);
+	if (retVal != 0) {
+        REPORT_ERROR("Failed to init Condition-Attribute, errno: ", retVal);
+		return false;
+    }
 
 	retVal = pthread_condattr_setpshared(&conditionAttr,
-										 isProcessShared ? PTHREAD_PROCESS_SHARED : PTHREAD_PROCESS_PRIVATE);
-	sAssertion(0 == retVal, "(CBinarySemaphore::CBinarySemaphore()) : Failed to set Condition-Attribute!", true);
+										 pIsProcessShared ? PTHREAD_PROCESS_SHARED : PTHREAD_PROCESS_PRIVATE);
+	if (retVal != 0) {
+        REPORT_ERROR("Failed to set Condition-Attribute, errno: ", retVal);
+		return false;
+    }
 
 	pthread_cond_init(&mCondition, &conditionAttr);
 	pthread_condattr_destroy(&conditionAttr);
 
 
-	if(false == isAvailable)
+	if(false == pIsFull)
 	{
 		mCounter = 0;
 	}
+	return true;
 }
+
 CBinarySemaphore::~CBinarySemaphore()
 {
 	pthread_mutex_destroy(&mMutex);
 }
+
 bool CBinarySemaphore::take(bool waitForever)
 {
 	bool result = true;
@@ -67,6 +92,7 @@ bool CBinarySemaphore::take(bool waitForever)
 	pthread_mutex_unlock(&mMutex);
 	return result;
 }
+
 void CBinarySemaphore::give()
 {
 	pthread_mutex_lock(&mMutex);

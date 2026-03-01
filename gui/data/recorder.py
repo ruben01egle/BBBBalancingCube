@@ -1,5 +1,5 @@
 import csv
-from .cdata import SContent
+from .cdata import CContent
 
 def extract_imu_data(msg):
     if msg is None:
@@ -17,7 +17,7 @@ def imu_headers():
         'S2_mWx', 'S2_mWy', 'S2_mWz', 'S2_mAx', 'S2_mAy', 'S2_mAz'
     ]
 
-def extract_state_data(msg: SContent):
+def extract_state_data(msg: CContent):
     if msg is None:
         return []
     state = msg.mStateData
@@ -50,7 +50,7 @@ class DataRecorder:
 
         self.writer.writerow(self.headers)
 
-    def record(self, msg: SContent):
+    def record(self, msg: CContent):
         row = [msg.mTimeUs]
         for extractor in self.extractors:
             row += extractor(msg)

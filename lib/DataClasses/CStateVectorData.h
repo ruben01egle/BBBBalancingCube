@@ -3,11 +3,10 @@
  * @date	5.12.2016
  * @brief	Structure to hold the values of the state vector
  */
-#ifndef SSTATEVECTORDATA_H
-#define SSTATEVECTORDATA_H
-#include "Global.h"
+#ifndef CSTATEVECTORDATA_H
+#define CSTATEVECTORDATA_H
 
-struct SStateVectorData
+class CStateVectorData
 {
 public:
 	float mPhi_A;			//! Phi-Value from the acceleration-estimate [rad]

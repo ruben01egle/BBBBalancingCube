@@ -8,14 +8,14 @@ from datetime import datetime
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5.QtCore import QTimer
 
-from data.cdata import SContent
+from data.cdata import CContent
 from data.client import TCPClient
 from plot.plotter import PlotManager
 from data.recorder import DataRecorder
 
 def main():
     
-    print(ctypes.sizeof(SContent))
+    print(ctypes.sizeof(CContent))
 
     app = QApplication(sys.argv)
 
@@ -36,8 +36,8 @@ def main():
     def receive_loop():
         try:
             while True:
-                data = client.recv_bytes(ctypes.sizeof(SContent))
-                msg = SContent.from_bytes(data)
+                data = client.recv_bytes(ctypes.sizeof(CContent))
+                msg = CContent.from_bytes(data)
                 recorder.record(msg)
                 data_queue.put(msg)
         except Exception as e:

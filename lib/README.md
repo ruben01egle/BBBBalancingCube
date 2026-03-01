@@ -79,7 +79,7 @@ It aggregates and coordinates access to sensors, motor control, ADC readings, an
 The **Socket** module provides a simple TCP server interface for communication with the python gui to visualize and record the experiment data. It abstracts the low-level socket handling and ensures reliable message transmission and reception.
 
 The `CServer` class implements a blocking TCP server on the BeagleBone Black.  
-It manages client connections, sending, and receiving structured messages (`SContent`), handling disconnects transparently.
+It manages client connections, sending, and receiving structured messages (`CContent`), handling disconnects transparently.
 
 #### Responsibilities
 
@@ -94,7 +94,7 @@ It manages client connections, sending, and receiving structured messages (`SCon
 |----------|-------------|
 | `init` | Initializes the server socket and prepares it for client connections. |
 | `waitForClient` | Blocks until a client connects to the server. |
-| `transmitMessage` | Sends a structured message (`SContent`) to the connected client. Returns `true` on success, `false` if the client disconnected. |
+| `transmitMessage` | Sends a structured message (`CContent`) to the connected client. Returns `true` on success, `false` if the client disconnected. |
 
 #### Internal Components
 

@@ -77,10 +77,10 @@ class IMUPlot(BasePlot):
     def get_widget(self):
         return self.widget
 
-    def update(self, scontent):
-        ts = scontent.mTimeUs
-        imu1 = scontent.mSensor1Data
-        imu2 = scontent.mSensor2Data
+    def update(self, ccontent):
+        ts = ccontent.mTimeUs
+        imu1 = ccontent.mSensor1Data
+        imu2 = ccontent.mSensor2Data
 
         self.timestamps.append(ts)
         self.accel_sensor1['x'].append(imu1.mAx)
