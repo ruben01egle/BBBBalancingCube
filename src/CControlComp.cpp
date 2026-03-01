@@ -30,6 +30,27 @@ void CControlComp::init()
     if (!mHardware.enableMotor()){
         return;
     }
+    int64_t currentMicros;
+    int64_t lastPrintMicros = 0;
+    int64_t sensorInitTime = 3;
+    mTimer.start();
+    do{
+        if (!runvar) {
+            return;
+        }
+        currentMicros = mTimer.getCurrentMicros();
+        mHardware.fetchValues(mADCVal, mImu1Data, mImu2Data);
+        mStateEstimation.estimateState(mADCVal, mImu1Data, mImu2Data, mStateData);
+        if (currentMicros - lastPrintMicros >= 1'000'000) {
+            int remainingSeconds = sensorInitTime - (currentMicros / 1'000'000);
+            if (remainingSeconds < 0) remainingSeconds = 0;
+            std::cout << "Sensor initialising, remaining seconds: " << remainingSeconds << std::endl;
+            lastPrintMicros = currentMicros;
+        }
+        mTimer.sleepUntilNext();
+
+    } while(currentMicros < sensorInitTime*1'000'000);
+
     mInitSuccesfull = true;
 }
 
