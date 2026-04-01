@@ -10,7 +10,7 @@ extern CContainer myContainer;
 extern atomic<bool> runvar;
 
 CCommComp::CCommComp(){
-	mClientConnected = false;
+	mTCPClientConnected = false;
 };
 
 CCommComp::~CCommComp(){
@@ -20,7 +20,8 @@ CCommComp::~CCommComp(){
 void CCommComp::init()
 {
 	cout << "Comm init " << endl;
-	mServer.init();
+	mTCPServer.init();
+	mUDPServer.init();
 	cout << "Comm: wait for Client connected" << endl;
 	size_t timeout = 1;
 	size_t timeoutCounter = 0;
@@ -28,11 +29,11 @@ void CCommComp::init()
 
 	while (runvar.load()) {
 		if (timeoutCounter > timeoutCounterMax) {
-			cout << "No client connected, end CommThread" << endl;
+			cout << "No client connected, end TCPServer" << endl;
 			break;
 		}
-		if (mServer.waitForClient(timeout)){
-			mClientConnected = true;
+		if (mTCPServer.waitForClient(timeout)){
+			mTCPClientConnected = true;
 			cout << "Client connected" << endl;
 			break;
 		}
@@ -44,21 +45,19 @@ void CCommComp::init()
 };
 
 void CCommComp::run()
-{
-	if (!mClientConnected){
-		cout << "Comm end" << endl;
-		return;
-	}
-	
+{	
 	cout << " CCommThread running " << endl;
-	while(runvar)
+	while(runvar.load())
 	{
 		myContainer.getContent(true, mData);
-		if (!runvar) break;
-		if (!mServer.transmitMessage(mData)){
-			cout << "CCommThread: Client disconncted or error while transmitting message" << endl;
-			break;
+		if (!runvar.load()) break;
+		if (mTCPClientConnected){
+			if (!mTCPServer.transmitMessage(mData)){
+				cout << "CCommThread: Client disconncted or error while transmitting message" << endl;
+				mTCPClientConnected = false;
+			}
 		}
+		mUDPServer.transmitMessage(mData);
 	}
 	cout<<"Comm End"<<endl;
 };

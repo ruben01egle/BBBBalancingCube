@@ -2,7 +2,8 @@
 #define CCOMMCOMP_H
 
 #include "IRunnable.h"
-#include "CServer.h"
+#include "CTCPServer.h"
+#include "CUDPServer.h"
 
 class CCommComp : public IRunnable
 {
@@ -14,8 +15,9 @@ public:
 
 private:
 	CContent mData;
-	CServer mServer;
-	bool mClientConnected;
+	CTCPServer mTCPServer;
+	CUDPServer mUDPServer;
+	bool mTCPClientConnected;
 };
 
 #endif

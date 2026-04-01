@@ -78,7 +78,7 @@ It aggregates and coordinates access to sensors, motor control, ADC readings, an
 
 The **Socket** module provides a simple TCP server interface for communication with the python gui to visualize and record the experiment data. It abstracts the low-level socket handling and ensures reliable message transmission and reception.
 
-The `CServer` class implements a blocking TCP server on the BeagleBone Black.  
+The `CTCPServer` class implements a blocking TCP server on the BeagleBone Black.  
 It manages client connections, sending, and receiving structured messages (`CContent`), handling disconnects transparently.
 
 #### Responsibilities

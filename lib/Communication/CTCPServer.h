@@ -1,15 +1,15 @@
-#ifndef CSERVER_HPP
-#define CSERVER_HPP
+#ifndef CTCPSERVER_HPP
+#define CTCPSERVER_HPP
 
 #include <cstdint>
 #include "CContent.h"
 #include <netinet/in.h>
 
-class CServer
+class CTCPServer
 {
 public:
-	CServer();
-	~CServer();
+	CTCPServer();
+	~CTCPServer();
 	bool init();
 	
 	bool waitForClient(size_t pTimeout);

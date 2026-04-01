@@ -1,4 +1,4 @@
-#include <CServer.h>
+#include <CTCPServer.h>
 
 #include <sys/socket.h>
 #include <unistd.h>
@@ -9,7 +9,7 @@
 #include "CErrorReporter.h"
 
 
-bool CServer::transmitMessage(CContent& content)
+bool CTCPServer::transmitMessage(CContent& content)
 {
 	bool success = false;
 	int32_t retVal = -1;
@@ -34,7 +34,7 @@ bool CServer::transmitMessage(CContent& content)
 	return success;
 }
 
-bool CServer::init()
+bool CTCPServer::init()
 {
 	mSocketFD = socket(AF_INET, SOCK_STREAM, 0);
 	if (mSocketFD < 0) {
@@ -66,7 +66,7 @@ bool CServer::init()
 	return true;
 }
 
-bool CServer::waitForClient(size_t pTimeout)
+bool CTCPServer::waitForClient(size_t pTimeout)
 {
 	struct timeval timeout;      
 	timeout.tv_sec = pTimeout;
@@ -84,14 +84,14 @@ bool CServer::waitForClient(size_t pTimeout)
 	return true;
 }
 
-CServer::CServer() : mSocketFD(-1),
+CTCPServer::CTCPServer() : mSocketFD(-1),
 					 mConnectedSocketFD(-1),
 					 mClientLen(0U)
 {
 
 }
 
-CServer::~CServer()
+CTCPServer::~CTCPServer()
 {
 	int32_t retVal = shutdown(mConnectedSocketFD, SHUT_RDWR);
 	if (retVal < 0) {
