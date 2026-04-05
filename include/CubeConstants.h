@@ -7,9 +7,8 @@ namespace Cube
 {
     constexpr float T_A = 0.02;
     constexpr int32_t TCP_PORT = 40000;
-    constexpr int32_t UDP_PORT = 40003;
     constexpr const char* UDP_CLIENT_IP = "127.0.0.1";
-    constexpr int32_t UDP_CLIENT_PORT = 40003;
+    constexpr int32_t UDP_CLIENT_PORT = 40001;
     constexpr uint32_t UDP_MSG_INT = static_cast<uint32_t>(0.5/T_A);
     constexpr float IMU_R1 = 0.14;
     constexpr float IMU_R2 = 0.061;

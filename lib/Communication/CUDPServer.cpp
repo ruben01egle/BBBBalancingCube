@@ -30,15 +30,6 @@ bool CUDPServer::init()
 		return false;
 	}
 
-	sockaddr_in localAddr{};
-	localAddr.sin_family = AF_INET;
-	localAddr.sin_port = htons(Cube::UDP_PORT);
-	localAddr.sin_addr.s_addr = INADDR_ANY;
-	if (bind(mSocket, (sockaddr*)&localAddr, sizeof(localAddr)) < 0) {
-		REPORT_ERROR_ERRNO("Failed to bind Socket");
-		return false;
-	}
-
 	mClientAddr.sin_family = AF_INET;
 	mClientAddr.sin_port = htons(Cube::UDP_CLIENT_PORT);
 	if (inet_pton(AF_INET, Cube::UDP_CLIENT_IP, &mClientAddr.sin_addr) <= 0) {
