@@ -2,10 +2,9 @@
 
 HOSTNAME="localhost"
 PORT="48000"
-USERNAME="root"
-HOMEDIR="/home/"
-PROJECTNAME="BBBBalancingCube"
-APPNAME="${PROJECTNAME}_app"
+USERNAME="debian"
+HOMEDIR="/home/debian/"
+APPNAME="balancing_cube_app"
 BUILD_DIR_DEBUG="debug"
 BUILD_DIR_RELEASE="release"
 BUILD_DIR_NATIVE="build_native"

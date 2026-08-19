@@ -103,7 +103,7 @@ Open a browser and acces the page [localhost:42000](http://localhost:42000/) to 
 
 Now you can reach the BBB with SSH:
 ```bash
-ssh root@localhost -p48000
+ssh debian@localhost -p48000
 ```
 To see the live camera feed and change the position of the cube run the python gui `cube_control.py`.
 

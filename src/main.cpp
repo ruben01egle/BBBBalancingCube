@@ -1,44 +1,29 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
-#include <atomic>
-#include <string>
-
-#include "CContainer.h"
-#include "CCommComp.h"
-#include "CControlComp.h"
-#include "CThread.h"
 
 using namespace std;
 
-CContainer myContainer;
-atomic<bool> runvar{true};
+#include "CMPU9250.h"
+#include "CIMUData.h"
 
 int main(){
 	cout << "main running" << endl;
 
-	CCommComp Comm;
-	CThread CommThread(&Comm, CThread::PRIORITY_ABOVE_NORM);
-	CommThread.start();
+	CMPU9250 imu1("/dev/spidev1.1");
+	imu1.init(0b00011000U);
+	CIMUData imu1_data;
 
-	for (uint8_t i = 0; i < 3; ++i) {
-		cout << "Starting ControlComp in " << int(3-i) << endl;
-		this_thread::sleep_for(chrono::seconds(1));
+	for(size_t i=0;i<1000;i++) {
+		if(!imu1.readSensorData(imu1_data)) {
+			cout << "error reading data" << endl;
+			break;
+		}
+		cout << "DotPhi (Z-Rot): " << imu1_data.mDotPhi 
+                 << " | DDotX (Acc X): " << imu1_data.mDDotX 
+                 << " | DDotY (Acc Y): " << imu1_data.mDDotY << endl;
+		this_thread::sleep_for(chrono::milliseconds(20));
 	}
-
-	CControlComp Control;
-	CThread ControlThread(&Control, CThread::EPriority::PRIORITY_REALTIME);
-	ControlThread.start();
-
-	cout << "Type a random character to kill program:" << endl;
-	
-	char in;
-    cin >> in;
-	runvar.store(false);
-
-	ControlThread.join();
-	myContainer.signalReader();
-	CommThread.join();
 
 	cout << "main end" << endl;
 	return 0;

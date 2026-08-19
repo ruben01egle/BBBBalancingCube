@@ -1,4 +1,4 @@
-APP_NAME = $(shell basename $(CURDIR))_app
+APP_NAME = balancing_cube_app
 # Default to native build
 TARGET_PLATFORM ?= bbb
 
