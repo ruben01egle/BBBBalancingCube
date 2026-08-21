@@ -4,13 +4,17 @@
 
 using namespace std;
 
-#include "CBBBHardware.h"
+#include "CHardware.hpp"
 #include "CIMUData.h"
 
 int main(){
 	cout << "main running" << endl;
 
 	CBBBHardware hw;
+    if (!hw.init()) {
+        return false;
+    }
+    cout << "init done" << endl;
 	CIMUData imu1_data;
 	CIMUData imu2_data;
 	uint16_t adc = 0;
@@ -18,6 +22,7 @@ int main(){
     hw.enableMotor();
     this_thread::sleep_for(chrono::milliseconds(500));
 
+    cout << "enter loop" << endl;
 	for(size_t i = 0; i < 1000; i++) {
         if(!hw.fetchValues(adc, imu1_data, imu2_data)) {
             cout << "error reading data" << endl;

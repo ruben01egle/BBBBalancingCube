@@ -1,6 +1,6 @@
 #include "CLoopTimer.h"
 
-#include "CErrorReporter.h"
+#include "CErrorReporter.hpp"
 
 CLoopTimer::CLoopTimer(double pTa)
 {

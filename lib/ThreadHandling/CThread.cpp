@@ -9,7 +9,7 @@
 #include <unistd.h>
 #include <cstdlib>
 
-#include "CErrorReporter.h"
+#include "CErrorReporter.hpp"
 
 using namespace std;
 

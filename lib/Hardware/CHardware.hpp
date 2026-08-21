@@ -1,16 +1,10 @@
-/**
- * @author	Michael Meindl, Benjamin Spiegler
- * @date	23.03.22
- * @brief	Host class to combine all other hardware-classes.
- */
-#ifndef CBBBHARDWARE_H
-#define CBBBHARDWARE_H
+#ifndef CBBBHARDWARE_HPP
+#define CBBBHARDWARE_HPP
+
 #include <cstdint>
-#include "CADCMMap.h"
-#include "CMotor.h"
+#include "CMaxonMotor.hpp"
 #include "CMPU9250.h"
 #include "CIMUData.h"
-#include "CGPIO.h"
 
 class CBBBHardware
 {
@@ -24,10 +18,10 @@ public:
 
 public:
 	CBBBHardware();
+	bool init();
 private:
-	CADCMMap mADC;
 	CMPU9250 mSensor1, mSensor2;
-	CMotor mMotor;
+	CMaxonMotor mMotor;
 };
 
 #endif

@@ -5,7 +5,7 @@
  * @brief Method definitions for a binary semaphore, which is simulated using a mutex.
  */
 #include "CBinarySemaphore.h"
-#include "CErrorReporter.h"
+#include "CErrorReporter.hpp"
 
 CBinarySemaphore::CBinarySemaphore() : mCounter(1)
 {

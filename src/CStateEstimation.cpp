@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <cmath>
 
-#include "CubeConstants.h"
+#include "CubeConstants.hpp"
 using namespace Cube;
 
 CStateEstimation::CStateEstimation(double pAlpha, double pTa, CCalibration pCalibration):

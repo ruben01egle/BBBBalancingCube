@@ -5,8 +5,8 @@
 #include <strings.h>
 #include <cerrno>
 
-#include "CubeConstants.h"
-#include "CErrorReporter.h"
+#include "CubeConstants.hpp"
+#include "CErrorReporter.hpp"
 
 
 bool CServer::transmitMessage(CContent& content)

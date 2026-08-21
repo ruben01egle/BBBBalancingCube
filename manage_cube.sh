@@ -155,7 +155,7 @@ start_debugger_bbb() {
         exit 1
     fi
     # shellcheck disable=SC2029
-    ssh -p "${PORT}" "$USERNAME"@"$HOSTNAME" "gdbserver :2345 ${HOMEDIR}${APPNAME}"
+    ssh -p "${PORT}" "$USERNAME"@"$HOSTNAME" "sudo gdbserver :2345 ${HOMEDIR}${APPNAME}"
 }
 
 sshkey2BBB() {

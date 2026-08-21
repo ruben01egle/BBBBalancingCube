@@ -1,7 +1,11 @@
+#pragma once
+
 #include <cstdint>
 #include <array>
 
 #include "CCalibration.h"
+#include "CPWMModuleConfig.hpp"
+#include "CMaxonMotor.hpp"
 
 namespace Cube
 {
@@ -11,7 +15,7 @@ namespace Cube
     constexpr float IMU_R2 = 0.061;
     constexpr float IMU_ALPHA = IMU_R1/IMU_R2;
     constexpr float ALPHA = 0.98;
-    constexpr float MAX_TM = 0.5;
+    constexpr float MAX_TM = 0.1;
 
     constexpr CCalibration DEFAULT_CALIBRATION = {
         // IMU 1
@@ -37,6 +41,32 @@ namespace Cube
         .mPhiOffset        = 0.0
     };
 
+    // Motor cfg
+    constexpr uint8_t MOTOR_PWM_MODULE = 0;
+    constexpr uint8_t MOTOR_PWM_PIN = 1;
+    constexpr uint8_t MOTOR_ENABLE_GPIO = 66;
+    constexpr uint8_t MOTOR_DIRECTION_GPIO = 67;
+    constexpr CPWMModuleConfig MOTOR_PWM_MODULE_CFG = CPWMModuleConfig(50, true);
+
+    constexpr double MOTOR_TORQUE_CONST = 0.0369;
+    constexpr CMaxonMotor::PWMCfg MOTOR_PWM_CFG = {
+        .dutyCyclePercentMin = 10,
+        .dutyCyclePercentMax = 90,
+        .minTarget = 0,
+        .maxTarget = 2.0    // TODO: according to comment from old framework: maxCurrent: 3,21A bei 90% PWM. Max. Cont. eigentlich 2,7A
+    };
+
+    constexpr uint8_t ADC_STEP_IDX = 1;
+    constexpr CADCConfig ADC_CFG = {
+        .mode = CADCConfig::Mode::ONESHOT,
+        .channel = CADCConfig::Channel::AIN0,
+        .fifo = CADCConfig::FIFOSel::FIFO1,
+        .averaging = CADCConfig::Averaging::AVG_4_SAM,
+        .sampleDelay = 10,
+        .openDelay = 20
+    };
+
+    // Sensor cfg
     constexpr uint8_t CUBE = 5;
     constexpr std::array<float, 3> K = {-2.1431F, -0.2186F, -0.0013F};
     static constexpr CCalibration ALL_CUBES[] = {
