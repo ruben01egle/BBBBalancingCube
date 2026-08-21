@@ -5,10 +5,10 @@
 #include <memory>
 
 #include <cstdint>
-#include "CPWMMMAP.hpp"
+#include "CPWM.h"
 #include "CPWMModuleConfig.hpp"
 #include "CGPIOMMAP.hpp"
-#include "CADCMMAP.hpp"
+#include "CADCMMap.h"
 #include "CADCConfig.hpp"
 
 class CMaxonMotor
@@ -56,10 +56,10 @@ private:
     std::shared_ptr<CGPIOMMAP> mDirectionPin;
 
     uint8_t mADCStepIdx;
-    std::shared_ptr<CADCMMAP> mADC;
+    CADCMMap mADC;
     CADCConfig mADCCfg;
 
-    std::shared_ptr<CPWMMMAP> mPWM;
+    CPWM mPWM;
     uint8_t mPWMModule;
     CPWMModuleConfig mModuleConfig;
     uint8_t mPWMPin;

@@ -4,6 +4,8 @@
 #include <chrono>
 #include <algorithm>
 
+#include <iostream>
+
 #include "CInterfaceManager.hpp"
 
 CMaxonMotor::CMaxonMotor(uint8_t pPWMModule,
@@ -19,6 +21,7 @@ CMaxonMotor::CMaxonMotor(uint8_t pPWMModule,
                             mDirectionGPIONr(pDirectionGpioNr),
                             mADCStepIdx(pADCStepIdx),
                             mADCCfg(pADCCfg),
+                            mPWM("0", "1"),
                             mPWMModule(pPWMModule),
                             mModuleConfig(pPWMModuleCfg),
                             mPWMPin(pPWMPin),
@@ -62,31 +65,6 @@ CMaxonMotor::Status CMaxonMotor::init()
     }
     if (mDirectionPin->init(true) != CGPIOMMAP::Status::OKAY) {
         return Status::HARDWARE_ERROR;
-    }
-
-    CInterfaceManager<uint8_t, CADCMMAP> interfaceManagerADC;
-    auto adc = interfaceManagerADC.getInstance(mADCStepIdx, true);
-    if (adc.has_value()) {
-        mADC = adc.value();
-    }
-    else {
-        mADC = nullptr;
-        return Status::HARDWARE_ERROR;
-    }
-    if (mADC->init(mADCCfg) != CADCMMAP::Status::OKAY) {
-        return Status::HARDWARE_ERROR;
-    }
-
-    CInterfaceManager<uint8_t, CPWMMMAP> interfaceManager;
-    auto pwmModule = interfaceManager.getInstance(mPWMModule, true);
-    if (pwmModule.has_value()) {
-        mPWM = pwmModule.value();
-    }
-    else {
-        return Status::PWM_MODULE_NOT_AVAILABLE;
-    }
-    if (mPWM->init(mPWMPin, mModuleConfig) != CPWMMMAP::Status::OKAY) {
-        return Status::PWM_MODULE_NOT_AVAILABLE;
     }
 
     return Status::OKAY;
@@ -134,7 +112,7 @@ CMaxonMotor:: Status CMaxonMotor::setTorque(double pTorque)
 
 CMaxonMotor::Status CMaxonMotor::getRawVelocity(uint16_t& pRawVelocity)
 {
-    if (mADC->readADC(pRawVelocity) != CADCMMAP::Status::OKAY) {
+    if (!mADC.fetchValue(pRawVelocity)) {
         return Status::HARDWARE_ERROR;
     }
     return Status::OKAY;
@@ -147,10 +125,8 @@ double CMaxonMotor::calculateDutyCyclePercent(double pTarget)
 
 CMaxonMotor::Status CMaxonMotor::setPWM(double pDutyCyclePercent)
 {
-    if (mPWM == nullptr) {
-        return Status::PWM_MODULE_NOT_AVAILABLE;
-    }
-    if (mPWM->setDutyCycle(mPWMPin, pDutyCyclePercent) != CPWMMMAP::Status::OKAY) {
+    std::cout << "dc: " << pDutyCyclePercent << std::endl;
+    if (!mPWM.setDutyCycle(pDutyCyclePercent)) {
         return Status::PWM_MODULE_ERROR;
     }
     return Status::OKAY;
