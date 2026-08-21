@@ -13,9 +13,8 @@
 #include <unistd.h>
 
 
-CBBBHardware::CBBBHardware() : mSensor1("/dev/spidev2.0"), mSensor2("/dev/spidev2.1"), mMotor{"7", "1", "66", "67", 2.0f, 0.0369f, 1.0f}
+CBBBHardware::CBBBHardware() : mSensor1("/dev/spidev1.0"), mSensor2("/dev/spidev1.1"), mMotor{"0", "1", "546", "547", 2.0f, 0.0369f, 1.0f}
 
-//CBBBHardware::CBBBHardware() : mSensor1("/dev/spidev2.0"), mSensor2("/dev/spidev2.1"), mMotor{"7", "1", "66", "67", 3.21f, 0.0369f, 1.0f}
 {
 	mSensor1.init(0b00011000U);		// setting checked ok. JW 24.4.22
 	mSensor2.init(0b00011000U);

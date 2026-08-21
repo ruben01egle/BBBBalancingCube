@@ -23,7 +23,7 @@ CPWM::CPWM(const string& chipNr,
 {
 	string chip_path       = "/sys/class/pwm/pwmchip" + chipNr;
 	string export_path 	   = chip_path + "/export";
-	string pwm_path 	   = chip_path + "/pwm-" + chipNr + ":" + pwmNr;
+	string pwm_path 	   = chip_path + "/pwm" + pwmNr;
 
 	int ret = access(pwm_path.c_str(), F_OK);
 	if(ret < 0)
