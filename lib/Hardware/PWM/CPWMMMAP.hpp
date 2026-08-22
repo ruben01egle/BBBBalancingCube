@@ -16,6 +16,7 @@
 #include <optional>
 
 #include <cstdint>
+#include <string>
 #include "CPWMModuleConfig.hpp"
 
 template <typename InterfaceIdentifier, typename InterfaceType> class CInterfaceManager;
@@ -54,6 +55,9 @@ public:
 private:
 	Status setFrequency(uint32_t pFrequencyHz);
 	void setHighLowActive(bool pActiveHigh);
+	// The kernel assigns sysfs pwmchip indices in probe/overlay order, which is not guaranteed
+	// to match the physical EPWM module number -- resolve it by matching the physical address.
+	std::optional<std::string> resolvePwmChipIndex(uint8_t pPWMModule) const;
 
 private:
 	uint8_t* mapPtr;

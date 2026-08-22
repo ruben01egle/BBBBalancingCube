@@ -21,7 +21,6 @@ CMaxonMotor::CMaxonMotor(uint8_t pPWMModule,
                             mDirectionGPIONr(pDirectionGpioNr),
                             mADCStepIdx(pADCStepIdx),
                             mADCCfg(pADCCfg),
-                            mPWM("0", "1"),
                             mPWMModule(pPWMModule),
                             mModuleConfig(pPWMModuleCfg),
                             mPWMPin(pPWMPin),
@@ -67,6 +66,18 @@ CMaxonMotor::Status CMaxonMotor::init()
         return Status::HARDWARE_ERROR;
     }
 
+    CInterfaceManager<uint8_t, CPWMMMAP> interfaceManager;
+    auto pwmModule = interfaceManager.getInstance(mPWMModule, true);
+    if (pwmModule.has_value()) {
+        mPWM = pwmModule.value();
+    }
+    else {
+        return Status::PWM_MODULE_NOT_AVAILABLE;
+    }
+    if (mPWM->init(mPWMPin, mModuleConfig) != CPWMMMAP::Status::OKAY) {
+        return Status::PWM_MODULE_NOT_AVAILABLE;
+    }
+
     return Status::OKAY;
 }
 
@@ -78,7 +89,7 @@ CMaxonMotor::Status CMaxonMotor::enable()
     if (setTorque(0) != Status::OKAY) {
         return Status::HARDWARE_ERROR;
     }
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
     mEnablePin->setHigh();
     return Status::OKAY;
 }
@@ -125,8 +136,10 @@ double CMaxonMotor::calculateDutyCyclePercent(double pTarget)
 
 CMaxonMotor::Status CMaxonMotor::setPWM(double pDutyCyclePercent)
 {
-    std::cout << "dc: " << pDutyCyclePercent << std::endl;
-    if (!mPWM.setDutyCycle(pDutyCyclePercent)) {
+    if (mPWM == nullptr) {
+        return Status::PWM_MODULE_NOT_AVAILABLE;
+    }
+    if (mPWM->setDutyCycle(mPWMPin, pDutyCyclePercent) != CPWMMMAP::Status::OKAY) {
         return Status::PWM_MODULE_ERROR;
     }
     return Status::OKAY;

@@ -5,7 +5,7 @@
 #include <memory>
 
 #include <cstdint>
-#include "CPWM.h"
+#include "CPWMMMAP.hpp"
 #include "CPWMModuleConfig.hpp"
 #include "CGPIOMMAP.hpp"
 #include "CADCMMap.h"
@@ -59,7 +59,7 @@ private:
     CADCMMap mADC;
     CADCConfig mADCCfg;
 
-    CPWM mPWM;
+    std::shared_ptr<CPWMMMAP> mPWM;
     uint8_t mPWMModule;
     CPWMModuleConfig mModuleConfig;
     uint8_t mPWMPin;

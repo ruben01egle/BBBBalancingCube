@@ -42,7 +42,7 @@ namespace Cube
     };
 
     // Motor cfg
-    constexpr uint8_t MOTOR_PWM_MODULE = 0;
+    constexpr uint8_t MOTOR_PWM_MODULE = 2;
     constexpr uint8_t MOTOR_PWM_PIN = 1;
     constexpr uint8_t MOTOR_ENABLE_GPIO = 66;
     constexpr uint8_t MOTOR_DIRECTION_GPIO = 67;
