@@ -72,22 +72,9 @@ CADCMMAP::Status CADCMMAP::readADC(uint16_t& pValue)
     {
     case CADCConfig::Mode::ONESHOT:
         setBits(OFFS_STEPENABLE, 0x01 << mStepIdx);
-        {
-            int dbg = 0;
-            while (mValueQueues[mStepIdx-1].empty()) {
-                readFifo();
-                if (dbg++ < 20) {
-                    printf("STEPENABLE=%08x ADCSTAT=%08x FIFO1COUNT=%08x IRQSTATUS_RAW=%08x CLKDIV=%08x\n",
-                        readRegister(OFFS_STEPENABLE), readRegister(OFFS_ADCSTAT),
-                        readRegister(OFFS_FIFO1COUNT), readRegister(OFFS_IRQSTATUS_RAW),
-                        readRegister(OFFS_ADC_CLKDIV));
-                    usleep(10000);
-                }
-            }
+        while (mValueQueues[mStepIdx-1].empty()) {
+            readFifo();
         }
-        //while (mValueQueues[mStepIdx-1].empty()) {
-        //    readFifo();
-        //}
         break;
 
     case CADCConfig::Mode::CONTINUOUS:
@@ -140,7 +127,7 @@ void CADCMMAP::readFifo()
         regValue = readRegister(fifoDataOffset);
         stepIdx = (regValue & MASK_STEP_IDX) >> 16;
         data = static_cast<uint16_t>(regValue & MASK_DATA);
-        mValueQueues[stepIdx-1].push(data);
+        mValueQueues[stepIdx].push(data);
     }
 }
 

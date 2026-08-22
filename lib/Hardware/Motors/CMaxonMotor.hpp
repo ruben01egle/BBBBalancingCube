@@ -8,7 +8,7 @@
 #include "CPWMMMAP.hpp"
 #include "CPWMModuleConfig.hpp"
 #include "CGPIOMMAP.hpp"
-#include "CADCMMap.h"
+#include "CADCMMAP.hpp"
 #include "CADCConfig.hpp"
 
 class CMaxonMotor
@@ -56,7 +56,7 @@ private:
     std::shared_ptr<CGPIOMMAP> mDirectionPin;
 
     uint8_t mADCStepIdx;
-    CADCMMap mADC;
+    std::shared_ptr<CADCMMAP> mADC;
     CADCConfig mADCCfg;
 
     std::shared_ptr<CPWMMMAP> mPWM;

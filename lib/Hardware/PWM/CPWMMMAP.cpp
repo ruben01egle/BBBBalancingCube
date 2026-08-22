@@ -2,7 +2,6 @@
 
 #include <string>
 #include <cstring>
-#include <iostream>
 #include <sstream>
 #include <dirent.h>
 #include <climits>
@@ -231,16 +230,12 @@ CPWMMMAP::Status CPWMMMAP::setDutyCycle(uint8_t pPWMPin, double pDutyCyclePercen
     // Compute integer tick duty cycle
     mCurrentDutyCycle = static_cast<uint32_t>(mCurrentPeriod * (pDutyCyclePercent / 100.0));
 
-	cout << "DEBUG: setDutyCycle fuer Pin " << (int)pPWMPin 
-         << " | mapPtr ist: " << (void*)mapPtr << endl;
-
     switch(pPWMPin) {
     case 0:
         *reinterpret_cast<volatile uint16_t*>(mapPtr + PWM_OFFS + OFFS_CMPA) = static_cast<uint16_t>(mCurrentDutyCycle);
         break;
     case 1:
         *reinterpret_cast<volatile uint16_t*>(mapPtr + PWM_OFFS + OFFS_CMPB) = static_cast<uint16_t>(mCurrentDutyCycle);
-        cout << "setting dc to: " << mCurrentDutyCycle << endl;
         break;
     default:
         REPORT_ERROR("Invalid PWM-Pin");

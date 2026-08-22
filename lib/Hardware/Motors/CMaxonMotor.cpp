@@ -66,6 +66,19 @@ CMaxonMotor::Status CMaxonMotor::init()
         return Status::HARDWARE_ERROR;
     }
 
+    CInterfaceManager<uint8_t, CADCMMAP> interfaceManagerADC;
+    auto adc = interfaceManagerADC.getInstance(mADCStepIdx, true);
+    if (adc.has_value()) {
+        mADC = adc.value();
+    }
+    else {
+        mADC = nullptr;
+        return Status::HARDWARE_ERROR;
+    }
+    if (mADC->init(mADCCfg) != CADCMMAP::Status::OKAY) {
+        return Status::HARDWARE_ERROR;
+    }
+
     CInterfaceManager<uint8_t, CPWMMMAP> interfaceManager;
     auto pwmModule = interfaceManager.getInstance(mPWMModule, true);
     if (pwmModule.has_value()) {
@@ -123,7 +136,7 @@ CMaxonMotor:: Status CMaxonMotor::setTorque(double pTorque)
 
 CMaxonMotor::Status CMaxonMotor::getRawVelocity(uint16_t& pRawVelocity)
 {
-    if (!mADC.fetchValue(pRawVelocity)) {
+    if (mADC->readADC(pRawVelocity) != CADCMMAP::Status::OKAY) {
         return Status::HARDWARE_ERROR;
     }
     return Status::OKAY;
