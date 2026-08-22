@@ -59,10 +59,6 @@ CADCMMAP::Status CADCMMAP::init(CADCConfig pADCConfig)
     }
     setBits(OFFS_CTRL, 0x01);                       // start adc
 
-    printf("CTRL=%08x ADCSTAT=%08x STEPCONFIG1=%08x FIFO0COUNT=%08x\n",
-       readRegister(OFFS_CTRL), readRegister(OFFS_ADCSTAT),
-       readRegister(OFFS_STEPCONFIG[0]), readRegister(OFFS_FIFO0COUNT));
-
     return Status::OKAY;
 }
 
@@ -127,6 +123,10 @@ void CADCMMAP::readFifo()
         regValue = readRegister(fifoDataOffset);
         stepIdx = (regValue & MASK_STEP_IDX) >> 16;
         data = static_cast<uint16_t>(regValue & MASK_DATA);
+        if (stepIdx >= NUM_STEPS) {
+            REPORT_ERROR("FIFO entry has out-of-range step index ", stepIdx);
+            continue;
+        }
         mValueQueues[stepIdx].push(data);
     }
 }

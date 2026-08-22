@@ -3,7 +3,7 @@
 
 #include <cstdint>
 #include "CMaxonMotor.hpp"
-#include "CMPU9250.h"
+#include "CMPU9250.hpp"
 #include "CIMUData.h"
 
 class CBBBHardware

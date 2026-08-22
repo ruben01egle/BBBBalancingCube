@@ -6,6 +6,8 @@
 #include "CCalibration.h"
 #include "CPWMModuleConfig.hpp"
 #include "CMaxonMotor.hpp"
+#include "CSPIChannelConfig.hpp"
+#include "CMPU9250.hpp"
 
 namespace Cube
 {
@@ -66,7 +68,28 @@ namespace Cube
         .openDelay = 20
     };
 
-    // Sensor cfg
+    // IMU cfg — both IMUs share SPI1, distinct CS channels
+    constexpr uint8_t IMU_SPI_MODULE = 1;
+    constexpr uint8_t IMU1_SPI_CHANNEL = 0;
+    constexpr uint8_t IMU2_SPI_CHANNEL = 1;
+    constexpr CSPIChannelConfig IMU_SPI_CHANNEL_CFG = {
+        .sclk_Frequency_Hz = 1000000,
+        .sclkHighActive = false,
+        .samplingOnEvenEdge = true,
+        .csHighActive = false,
+        .csMaintainActive = true,
+        .csTiming = CSPIChannelConfig::CS_15,
+        .startBitSelection = CSPIChannelConfig::NO_STARTBIT,
+        .wordLength = 8
+    };
+    constexpr CMPU9250::CMPU9250Setup IMU_SETUP = {
+        .gyroScale = CMPU9250::FS_RANGE_2000,
+        .accelScale = CMPU9250::FS_RANGE_4g,
+        .gyroLP = CMPU9250::G_LP_20HZ,
+        .accelLP = CMPU9250::A_LP_20HZ
+    };
+
+    // Calib cfg
     constexpr uint8_t CUBE = 5;
     constexpr std::array<float, 3> K = {-2.1431F, -0.2186F, -0.0013F};
     static constexpr CCalibration ALL_CUBES[] = {

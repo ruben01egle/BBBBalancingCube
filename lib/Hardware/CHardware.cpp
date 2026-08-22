@@ -4,8 +4,8 @@
 
 using namespace Cube;
 
-CBBBHardware::CBBBHardware():	mSensor1("/dev/spidev1.0"),
-								mSensor2("/dev/spidev1.1"),
+CBBBHardware::CBBBHardware():	mSensor1(IMU_SPI_MODULE, IMU1_SPI_CHANNEL, IMU_SPI_CHANNEL_CFG),
+								mSensor2(IMU_SPI_MODULE, IMU2_SPI_CHANNEL, IMU_SPI_CHANNEL_CFG),
 								mMotor(MOTOR_PWM_MODULE,
                                        MOTOR_PWM_PIN,
                                        MOTOR_ENABLE_GPIO,
@@ -22,8 +22,12 @@ CBBBHardware::CBBBHardware():	mSensor1("/dev/spidev1.0"),
 
 bool CBBBHardware::init()
 {
-	mSensor1.init(0b00011000U);		// setting checked ok. JW 24.4.22
-	mSensor2.init(0b00011000U);
+	if (mSensor1.initImu(IMU_SETUP) != CMPU9250::Status::OKAY) {
+		return false;
+	}
+	if (mSensor2.initImu(IMU_SETUP) != CMPU9250::Status::OKAY) {
+		return false;
+	}
 
 	if (mMotor.init() != CMaxonMotor::Status::OKAY) {
         return false;
@@ -41,10 +45,28 @@ bool CBBBHardware::fetchValues(uint16_t& adcValue,
 		return false;
 	}
 
-	if(!mSensor1.readSensorData(sensor1Data))
+	CMPU9250::rawData raw1;
+	if (mSensor1.readImu(raw1) != CMPU9250::Status::OKAY) {
 		return false;
-	if(!mSensor2.readSensorData(sensor2Data))
+	}
+	sensor1Data.mA_x = raw1.xAccel;
+	sensor1Data.mA_y = raw1.yAccel;
+	sensor1Data.mA_z = raw1.zAccel;
+	sensor1Data.mW_x = raw1.xGyro;
+	sensor1Data.mW_y = raw1.yGyro;
+	sensor1Data.mW_z = raw1.zGyro;
+
+	CMPU9250::rawData raw2;
+	if (mSensor2.readImu(raw2) != CMPU9250::Status::OKAY) {
 		return false;
+	}
+	sensor2Data.mA_x = raw2.xAccel;
+	sensor2Data.mA_y = raw2.yAccel;
+	sensor2Data.mA_z = raw2.zAccel;
+	sensor2Data.mW_x = raw2.xGyro;
+	sensor2Data.mW_y = raw2.yGyro;
+	sensor2Data.mW_z = raw2.zGyro;
+
 	return true;
 
 }
