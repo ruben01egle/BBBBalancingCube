@@ -93,9 +93,19 @@ CMPU9250::Status CMPU9250::initImu(CMPU9250Setup pSetup)
 CMPU9250::Status CMPU9250::readImu(rawData &pData)
 {
     constexpr uint8_t numBytes = 14;
+    constexpr uint8_t maxAttempts = 3;
     uint8_t rawData[numBytes] = {0};
 
-    Status ret = burstRead(ACCEL_XOUT_H, numBytes, rawData);
+    Status ret = Status::FAILED_TO_READ_SENSOR_DATA;
+    for (uint8_t attempt = 0; attempt < maxAttempts; ++attempt) {
+        ret = burstRead(ACCEL_XOUT_H, numBytes, rawData);
+        if (ret == Status::OKAY) {
+            break;
+        }
+        bool willRetry = (attempt + 1) < maxAttempts;
+        REPORT_ERROR("Imu readImu attempt ", static_cast<int>(attempt + 1), "/", static_cast<int>(maxAttempts),
+                      willRetry ? " failed, retrying" : " failed, giving up");
+    }
     if (ret != Status::OKAY) {
         return Status::FAILED_TO_READ_SENSOR_DATA;
     }

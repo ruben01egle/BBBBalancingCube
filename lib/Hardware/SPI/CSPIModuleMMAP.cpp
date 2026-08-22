@@ -222,7 +222,7 @@ CSPIModuleMMAP::Status CSPIModuleMMAP::configChannel(uint8_t pChannel, const CSP
 	*reinterpret_cast<uint32_t*>(mapPtr+SPI_CHXCONF[pChannel]) &= ~(1 << 6); // Delete bit 6
 	*reinterpret_cast<uint32_t*>(mapPtr+SPI_CHXCONF[pChannel]) |= (!pChannelConfig.csHighActive) << 6;
 	*reinterpret_cast<uint32_t*>(mapPtr+SPI_SYST) |= (pChannelConfig.csHighActive << pChannel);
-	*reinterpret_cast<uint32_t*>(mapPtr+SPI_SYST) |= ~(uint32_t(0x0) | (pChannelConfig.csHighActive << pChannel));
+	*reinterpret_cast<uint32_t*>(mapPtr+SPI_SYST) &= ~(uint32_t(0x0) | (pChannelConfig.csHighActive << pChannel));
 
 	// configure SPICLK high/low active
 	*reinterpret_cast<uint32_t*>(mapPtr+SPI_CHXCONF[pChannel]) |= (!pChannelConfig.sclkHighActive) << 1;
