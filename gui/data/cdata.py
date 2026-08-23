@@ -10,6 +10,13 @@ class CImuData(ctypes.Structure):
         ("mAz", ctypes.c_int16),
     ]
 
+class CImuDataCalibrated(ctypes.Structure):
+    _fields_ = [
+        ("mDotPhi", ctypes.c_float),
+        ("mDDotX", ctypes.c_float),
+        ("mDDotY", ctypes.c_float),
+    ]
+
 class CStateVectorData(ctypes.Structure):
     _fields_ = [
         ("mPhi_A", ctypes.c_float),
@@ -24,6 +31,8 @@ class CContent(ctypes.Structure):
         ("mTimeUs", ctypes.c_int64),
         ("mSensor1Data", CImuData),
         ("mSensor2Data", CImuData),
+        ("mSensor1DataCalib", CImuDataCalibrated),
+        ("mSensor2DataCalib", CImuDataCalibrated),
         ("mStateData", CStateVectorData),
         ("mMotorTorque", ctypes.c_float),
         ("mADCValue", ctypes.c_uint16),

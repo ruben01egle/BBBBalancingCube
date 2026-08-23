@@ -17,6 +17,20 @@ def imu_headers():
         'S2_mWx', 'S2_mWy', 'S2_mWz', 'S2_mAx', 'S2_mAy', 'S2_mAz'
     ]
 
+def extract_imu_calib_data(msg):
+    if msg is None:
+        return []
+    return [
+        msg.mSensor1DataCalib.mDotPhi, msg.mSensor1DataCalib.mDDotX, msg.mSensor1DataCalib.mDDotY,
+        msg.mSensor2DataCalib.mDotPhi, msg.mSensor2DataCalib.mDDotX, msg.mSensor2DataCalib.mDDotY
+    ]
+
+def imu_calib_headers():
+    return [
+        'S1_mDotPhi', 'S1_mDDotX', 'S1_mDDotY',
+        'S2_mDotPhi', 'S2_mDDotX', 'S2_mDDotY'
+    ]
+
 def extract_state_data(msg: CContent):
     if msg is None:
         return []
@@ -29,24 +43,39 @@ def extract_state_data(msg: CContent):
 def state_headers():
     return ['mPhi_A', 'mPhi_G', 'mPhi_C', 'mDotPhi', 'mDotPsi', 'mMotorTorque']
 
+def extract_adc_data(msg):
+    if msg is None:
+        return []
+    return [msg.mADCValue]
+
+def adc_headers():
+    return ['mADCValue']
+
+PART_MAP = {
+    'imuraw': (extract_imu_data, imu_headers),
+    'imucalib': (extract_imu_calib_data, imu_calib_headers),
+    'state': (extract_state_data, state_headers),
+    'adc': (extract_adc_data, adc_headers),
+}
+
 class DataRecorder:
     def __init__(self, filename, mode: str):
         self.file = open(filename, 'w', newline='')
         self.writer = csv.writer(self.file)
-        self.selected_parts = mode.lower().split('+')  # z. B. ['imu', 'state']
+        self.selected_parts = mode.lower().split('+')  # e.g. ['imuraw', 'imucalib', 'state']
+
+        if 'all' in self.selected_parts:
+            self.selected_parts = list(PART_MAP.keys())
 
         self.extractors = []
         self.headers = ['Timestamp_us']
 
         for part in self.selected_parts:
-            if part == 'imu':
-                self.extractors.append(lambda msg: extract_imu_data(msg))
-                self.headers += imu_headers()
-            elif part == 'state':
-                self.extractors.append(lambda msg: extract_state_data(msg))
-                self.headers += state_headers()
-            else:
+            if part not in PART_MAP:
                 raise ValueError(f"Unknown mode part: '{part}'")
+            extractor, headers_fn = PART_MAP[part]
+            self.extractors.append(extractor)
+            self.headers += headers_fn()
 
         self.writer.writerow(self.headers)
 

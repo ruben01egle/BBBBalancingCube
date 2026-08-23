@@ -4,20 +4,18 @@
 #include <array>
 
 #include "CStateVectorData.hpp"
-#include "CIMUData.hpp"
-#include "CCalibration.hpp"
+#include "CIMUDataCalibrated.hpp"
 
-class CStateEstimation 
+class CStateEstimation
 {
 public:
-    CStateEstimation(double pAlpha, double pTa, CCalibration pCalibration);
+    CStateEstimation(double pAlpha, double pTa);
 
-    void estimateState(const uint16_t& pADCVal, const CIMUData& pImu1Data, const CIMUData& pImu2Data, CStateVectorData& pStateData);
+    void estimateState(const CIMUDataCalibrated& pImu1CalibData, const CIMUDataCalibrated& pImu2CalibData, CStateVectorData& pStateData);
 
 private:
     double mAlpha;
     double mTa;
-    CCalibration mCalibration;
 
 private:
     static constexpr double g = 9.81; 

@@ -10,6 +10,7 @@
 #include "CubeConstants.hpp"
 #include "CContainer.hpp"
 #include "CErrorReporter.hpp"
+#include "CCalibrationData.hpp"
 
 using namespace Cube;
 using namespace std;
@@ -19,7 +20,8 @@ extern atomic<bool> runvar;
 
 CControlComp::CControlComp():
             mTimer(T_A),
-            mStateEstimation(ALPHA, T_A, CUBE_CONFIG),
+            mCalibration(CUBE_CONFIG),
+            mStateEstimation(ALPHA, T_A),
             mController(K, MAX_TM)
 {
     mInitSuccesfull = false;
@@ -45,7 +47,8 @@ void CControlComp::init()
         }
         currentMicros = mTimer.getCurrentMicros();
         mHardware.fetchValues(mADCVal, mImu1Data, mImu2Data);
-        mStateEstimation.estimateState(mADCVal, mImu1Data, mImu2Data, mStateData);
+        mCalibration.calibrate(mImu1Data, mImu2Data, mADCVal, mImu1CalibData, mImu2CalibData, mStateData.mDotPsi);
+        mStateEstimation.estimateState(mImu1CalibData, mImu2CalibData, mStateData);
         if (currentMicros - lastPrintMicros >= 1'000'000) {
             int remainingSeconds = sensorInitTime - (currentMicros / 1'000'000);
             if (remainingSeconds < 0) remainingSeconds = 0;
@@ -79,27 +82,34 @@ void CControlComp::run()
             runvar.store(false);
             break;
         }
-        mStateEstimation.estimateState(mADCVal, mImu1Data, mImu2Data, mStateData);
-
+        mCalibration.calibrate(mImu1Data, mImu2Data, mADCVal, mImu1CalibData, mImu2CalibData, mStateData.mDotPsi);
+        
+        mStateEstimation.estimateState(mImu1CalibData, mImu2CalibData, mStateData);
+        
         if (abs(mStateData.mPhi_C) > 0.25){
             cout << "Cube out of range" << endl;
             runvar.store(false);
         }
 
-        float TM = mController.update(mStateData);
+        CStateVectorData stateData;
+        stateData = mStateData;
+        stateData.mPhi_C -= CUBE_CONFIG.mPhiOffset;
+        float TM = mController.update(stateData);
 
         if (!mHardware.setTorque(TM)) {
             REPORT_ERROR("ControlComp: setTorque failed");
             runvar.store(false);
             break;
         }
-
+        
         myContainer.writeData(
             currentMicros,
             mADCVal,
             TM,
             mImu1Data,
             mImu2Data,
+            mImu1CalibData,
+            mImu2CalibData,
             mStateData
         );
         myContainer.signalReader();

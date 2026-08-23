@@ -29,7 +29,7 @@ def main():
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     file_path = Path(f"ExperimentsData/experiment_data{timestamp}.csv")
     file_path.parent.mkdir(parents=True, exist_ok=True)
-    recorder = DataRecorder(file_path, mode="imu+state")
+    recorder = DataRecorder(file_path, mode="all")
 
     data_queue = queue.Queue()
 

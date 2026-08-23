@@ -1,6 +1,13 @@
 from PyQt5.QtWidgets import QWidget, QGridLayout
 from .imu_plot import IMUPlot
+from .imu_calib_plot import IMUCalibPlot
 from .state_plot import StatePlot
+
+PLOT_TYPES = {
+    "imuraw": IMUPlot,
+    "imucalib": IMUCalibPlot,
+    "state": StatePlot,
+}
 
 class PlotManager:
     def __init__(self, mode):
@@ -9,27 +16,13 @@ class PlotManager:
         self.widget.setLayout(self.layout)
         self.plots = []
 
-        if mode == "imu+state":
-            imu_plot = IMUPlot()
-            state_plot = StatePlot()
-            self.plots = [imu_plot, state_plot]
-
-            self.layout.addWidget(imu_plot.get_widget(), 0, 0)
-            self.layout.addWidget(state_plot.get_widget(), 0, 1)
-
-        elif mode == "imu":
-            imu_plot = IMUPlot()
-            self.plots = [imu_plot]
-            self.layout.addWidget(imu_plot.get_widget(), 0, 0)
-
-        elif mode == "state":
-            state_plot = StatePlot()
-            self.plots = [state_plot]
-            self.layout.addWidget(state_plot.get_widget(), 0, 0)
-
-
-        else:
-            raise ValueError(f"Unknown mode: {mode}")
+        parts = mode.lower().split('+')
+        for col, part in enumerate(parts):
+            if part not in PLOT_TYPES:
+                raise ValueError(f"Unknown mode: {mode}")
+            plot = PLOT_TYPES[part]()
+            self.plots.append(plot)
+            self.layout.addWidget(plot.get_widget(), 0, col)
 
     def get_widget(self):
         return self.widget

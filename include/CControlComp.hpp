@@ -6,10 +6,12 @@
 #include "CHardware.hpp"
 #include "CStateVectorData.hpp"
 #include "CIMUData.hpp"
+#include "CIMUDataCalibrated.hpp"
+#include "CCalibration.hpp"
 #include "CStateEstimation.hpp"
 #include "CController.hpp"
 
-class CControlComp : public IRunnable 
+class CControlComp : public IRunnable
 {
 public:
     CControlComp();
@@ -22,8 +24,11 @@ private:
     CStateVectorData mStateData;
     CIMUData mImu1Data;
     CIMUData mImu2Data;
+    CIMUDataCalibrated mImu1CalibData;
+    CIMUDataCalibrated mImu2CalibData;
     uint16_t mADCVal;
     CHardware mHardware;
+    CCalibration mCalibration;
     CStateEstimation mStateEstimation;
     CController mController;
 };

@@ -49,23 +49,25 @@ bool CHardware::fetchValues(uint16_t& adcValue,
 	if (mSensor1.readImu(raw1) != CMPU9250::Status::OKAY) {
 		return false;
 	}
-	sensor1Data.mA_x = raw1.xAccel;
+	// match the imu coordinate system to the one used in modelling
+	sensor1Data.mA_x = -raw1.xAccel;
 	sensor1Data.mA_y = raw1.yAccel;
-	sensor1Data.mA_z = raw1.zAccel;
+	sensor1Data.mA_z = -raw1.zAccel;
 	sensor1Data.mW_x = raw1.xGyro;
 	sensor1Data.mW_y = raw1.yGyro;
-	sensor1Data.mW_z = raw1.zGyro;
+	sensor1Data.mW_z = -raw1.zGyro;
 
 	CMPU9250::rawData raw2;
 	if (mSensor2.readImu(raw2) != CMPU9250::Status::OKAY) {
 		return false;
 	}
-	sensor2Data.mA_x = raw2.xAccel;
+	// match the imu coordinate system to the one used in modelling
+	sensor2Data.mA_x = -raw2.xAccel;
 	sensor2Data.mA_y = raw2.yAccel;
-	sensor2Data.mA_z = raw2.zAccel;
+	sensor2Data.mA_z = -raw2.zAccel;
 	sensor2Data.mW_x = raw2.xGyro;
 	sensor2Data.mW_y = raw2.yGyro;
-	sensor2Data.mW_z = raw2.zGyro;
+	sensor2Data.mW_z = -raw2.zGyro;
 
 	return true;
 

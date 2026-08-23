@@ -42,12 +42,13 @@ class MainWindow(QWidget):
         control_layout.addWidget(radio_group)
 
         self.buttons = {}
+        # TODO: events are named in line with old coordinate system -> display current
         for event_name, button_text in [
-            ("Set90Deg", "90°"),
-            ("Set10Deg", "10°"),
+            ("Set90Deg", "-90°"),
+            ("Set10Deg", "-10°"),
             ("Set0Deg", "0°"),
-            ("SetM10Deg", "-10°"),
-            ("SetM90Deg", "-90°"),
+            ("SetM10Deg", "10°"),
+            ("SetM90Deg", "90°"),
             ("Set_5deg_gap", "5° Gap"),
             ("Set_release", "Release")
         ]:

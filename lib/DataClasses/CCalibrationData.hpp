@@ -1,6 +1,6 @@
 #pragma once
 
-class CCalibration
+class CCalibrationData
 {
 public:
     // Accelerometer calibration factors

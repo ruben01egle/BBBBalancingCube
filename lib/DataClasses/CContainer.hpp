@@ -11,6 +11,7 @@
 #include <cstdint>
 #include "CContent.hpp"
 #include "CStateVectorData.hpp"
+#include "CIMUDataCalibrated.hpp"
 #include "CBinarySemaphore.hpp"
 
 class CContainer
@@ -19,11 +20,13 @@ public:
 	bool getContent(bool waitForever,
 					CContent& content);
 	void signalReader();
-	bool writeData(const int64_t timeUs, 
-                              const uint16_t adcValue, 
-                              const float torque, 
-                              const CIMUData& sensor1, 
-                              const CIMUData& sensor2, 
+	bool writeData(const int64_t timeUs,
+                              const uint16_t adcValue,
+                              const float torque,
+                              const CIMUData& sensor1,
+                              const CIMUData& sensor2,
+                              const CIMUDataCalibrated& sensor1Calib,
+                              const CIMUDataCalibrated& sensor2Calib,
                               const CStateVectorData& stateData);
 
 	bool writeTime(const int64_t timeUs);
@@ -31,6 +34,8 @@ public:
 	bool writeTorqueValue(const float torque);
 	bool writeSensor1Data(const CIMUData& sensorData);
 	bool writeSensor2Data(const CIMUData& sensorData);
+	bool writeSensor1CalibData(const CIMUDataCalibrated& sensorData);
+	bool writeSensor2CalibData(const CIMUDataCalibrated& sensorData);
 	bool writeStateData(const CStateVectorData& sensorData);
 public:
 	CContainer();

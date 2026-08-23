@@ -14,3 +14,5 @@ public:
 	float mDotPhi = 0.0;			//! Phi__d-Value from the gyroscopes [rad/sec]
 	float mDotPsi = 0.0;			//! Psi__d-Vallue from the ADC	[rad/sec]
 };
+
+static_assert(sizeof(CStateVectorData) == 20, "CStateVectorData size mismatch! Check alignment.");
