@@ -3,8 +3,7 @@
  * @date	5.12.2016
  * @brief	Structure to hold the values of the state vector
  */
-#ifndef CSTATEVECTORDATA_H
-#define CSTATEVECTORDATA_H
+#pragma once
 
 class CStateVectorData
 {
@@ -15,5 +14,3 @@ public:
 	float mDotPhi = 0.0;			//! Phi__d-Value from the gyroscopes [rad/sec]
 	float mDotPsi = 0.0;			//! Psi__d-Vallue from the ADC	[rad/sec]
 };
-
-#endif

@@ -4,13 +4,16 @@
  * @date	5.12.2016
  * @brief	Method definitions for the container.
  */
-#include "CContainer.h"
-#include "CIMUData.h"
+#include "CContainer.hpp"
+#include "CIMUData.hpp"
+#include "CErrorReporter.hpp"
 
 
 CContainer::CContainer()
 {
-	mReadSem.init(false, false);
+	if (!mReadSem.init(false, false)) {
+		REPORT_ERROR("CContainer: failed to init read semaphore");
+	}
 }
 bool CContainer::getContent(bool waitForever,
 							CContent& content)

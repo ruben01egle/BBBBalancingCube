@@ -1,5 +1,4 @@
-#ifndef CLOOPTIMER_H
-#define CLOOPTIMER_H
+#pragma once
 
 #include <cstdint>
 #include <ctime>
@@ -16,5 +15,3 @@ private:
     struct timespec mWakeTime;
     int64_t mTaNS;
 };
-
-#endif

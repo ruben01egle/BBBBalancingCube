@@ -6,12 +6,12 @@
  * 			and transmits them via the TCP/IP-socket.
  * 			The control-component writes the values - without signaling - and gives the read semaphore.
  */
-#ifndef CCONTAINER_H
-#define CCONTAINER_H
+#pragma once
+
 #include <cstdint>
-#include "CContent.h"
-#include "CStateVectorData.h"
-#include "CBinarySemaphore.h"
+#include "CContent.hpp"
+#include "CStateVectorData.hpp"
+#include "CBinarySemaphore.hpp"
 
 class CContainer
 {
@@ -38,5 +38,3 @@ private:
 	CContent mContent;
 	CBinarySemaphore mReadSem;
 };
-
-#endif

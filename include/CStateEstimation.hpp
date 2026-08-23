@@ -1,12 +1,11 @@
-#ifndef CSTATEESTIMATION_H
-#define CSTATEESTIMATION_H
+#pragma once
 
 #include <vector>
 #include <array>
 
-#include "CStateVectorData.h"
-#include "CIMUData.h"
-#include "CCalibration.h"
+#include "CStateVectorData.hpp"
+#include "CIMUData.hpp"
+#include "CCalibration.hpp"
 
 class CStateEstimation 
 {
@@ -23,5 +22,3 @@ private:
 private:
     static constexpr double g = 9.81; 
 };
-
-#endif

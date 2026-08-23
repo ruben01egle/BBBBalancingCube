@@ -4,8 +4,7 @@
  * @date 24.9.2016
  * @brief File containing an interface for implement tasks which are run in a separate thread.
  */
-#ifndef IRUNNABLE_H
-#define IRUNNABLE_H
+#pragma once
 
 class IRunnable
 {
@@ -15,5 +14,3 @@ public:
 public:
 	virtual ~IRunnable() {};
 };
-
-#endif

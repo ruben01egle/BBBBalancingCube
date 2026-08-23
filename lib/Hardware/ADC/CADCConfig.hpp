@@ -1,5 +1,4 @@
-#ifndef CADCCONFIG_HPP
-#define CADCCONFIG_HPP
+#pragma once
 
 #include <cstdint>
 
@@ -39,5 +38,3 @@ public:
     uint16_t openDelay;
 
 };
-
-#endif

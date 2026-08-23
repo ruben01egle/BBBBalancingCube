@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <array>
 
-#include "CCalibration.h"
+#include "CCalibration.hpp"
 #include "CPWMModuleConfig.hpp"
 #include "CMaxonMotor.hpp"
 #include "CSPIChannelConfig.hpp"
@@ -90,7 +90,7 @@ namespace Cube
     };
 
     // Calib cfg
-    constexpr uint8_t CUBE = 5;
+    constexpr uint8_t CUBE = 14;
     constexpr std::array<float, 3> K = {-2.1431F, -0.2186F, -0.0013F};
     static constexpr CCalibration ALL_CUBES[] = {
         // Index 0 = Cube 1

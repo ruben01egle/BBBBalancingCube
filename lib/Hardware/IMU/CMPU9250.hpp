@@ -1,5 +1,4 @@
-#ifndef CMPU9250_HPP
-#define CMPU9250_HPP
+#pragma once
 
 #include <memory>
 
@@ -144,5 +143,3 @@ private:
 
 	static constexpr uint8_t WHO_AM_I_EXPECTED = 0x71;
 };
-
-#endif

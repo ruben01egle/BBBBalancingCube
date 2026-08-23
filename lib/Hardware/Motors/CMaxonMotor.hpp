@@ -1,5 +1,4 @@
-#ifndef CMAXONMOTOR_HPP
-#define CMAXONMOTOR_HPP
+#pragma once
 
 #include <vector>
 #include <memory>
@@ -67,5 +66,3 @@ private:
 
     const double mTorqueConst;
 };
-
-#endif

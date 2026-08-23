@@ -1,5 +1,4 @@
-#ifndef CINTERFACEMANAGER_HPP
-#define CINTERFACEMANAGER_HPP
+#pragma once
 
 #include <map>
 #include <memory>
@@ -31,5 +30,3 @@ private:
     static inline std::map<InterfaceIdentifier, std::pair<std::shared_ptr<InterfaceType>, bool>> mInstances;
     static inline std::mutex mMtx;
 };
-
-#endif

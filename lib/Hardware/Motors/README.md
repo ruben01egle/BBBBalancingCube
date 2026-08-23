@@ -1,6 +1,6 @@
 # Motors/
 
-`CMaxonMotor` is the torque-controlled motor driver used by [CBBBHardware](../README.md#entry-point-cbbbhardware). It composes three lower-level drivers: one [PWM](../PWM/README.md) output (speed/torque set-point to the motor driver), two [GPIO](../GPIO/README.md)s (enable + direction), and one [ADC](../ADC/README.md) step (current/velocity feedback).
+`CMaxonMotor` is the torque-controlled motor driver used by [CHardware](../README.md#entry-point-chardware). It composes three lower-level drivers: one [PWM](../PWM/README.md) output (speed/torque set-point to the motor driver), two [GPIO](../GPIO/README.md)s (enable + direction), and one [ADC](../ADC/README.md) step (current/velocity feedback).
 
 ## Usage
 

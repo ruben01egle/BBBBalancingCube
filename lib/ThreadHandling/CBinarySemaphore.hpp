@@ -4,8 +4,8 @@
  * @date 18.9.2016
  * @brief Class definition for a binary semaphore, which is sumulated using a mutex.
  */
-#ifndef CBINARYSEMAPHORE_H
-#define CBINARYSEMAPHORE_H
+#pragma once
+
 #include <cstdint>
 #include <pthread.h>
 
@@ -23,5 +23,3 @@ private:
 	pthread_cond_t mCondition;
 	int32_t mCounter;
 };
-
-#endif

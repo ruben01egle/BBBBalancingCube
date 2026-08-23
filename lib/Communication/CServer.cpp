@@ -1,4 +1,4 @@
-#include <CServer.h>
+#include "CServer.hpp"
 
 #include <sys/socket.h>
 #include <unistd.h>
@@ -27,6 +27,8 @@ bool CServer::transmitMessage(CContent& content)
 		else if(retVal < 0)
 		{
 			REPORT_ERROR_ERRNO("Failed to send the message");
+			success = false;
+			break;
 		}
 		success = true;
 		writtenByte += retVal;
@@ -39,6 +41,7 @@ bool CServer::init()
 	mSocketFD = socket(AF_INET, SOCK_STREAM, 0);
 	if (mSocketFD < 0) {
 		REPORT_ERROR_ERRNO("Failed to open socket");
+		return false;
 	}
 
 	int enable = 1;

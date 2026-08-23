@@ -1,5 +1,4 @@
-#ifndef CPWMMODULECONFIG_HPP
-#define CPWMMODULECONFIG_HPP
+#pragma once
 
 #include <cstdint>
 
@@ -19,5 +18,3 @@ public:
     uint32_t mFrequency;
     bool mActiveHigh;
 };
-
-#endif

@@ -45,9 +45,9 @@ The general framework provides a pre-configured multi-threading environment, inc
 
 The **Hardware** module encapsulates all low-level access to the physical components of the system.  
 It provides a clean abstraction layer between the control logic and the underlying hardware drivers.  
-All hardware interaction is managed through the central interface class **`CBBBHardware`**.
+All hardware interaction is managed through the central interface class **`CHardware`**.
 
-The `CBBBHardware` class serves as the **host and entry point** to all hardware functionality on the BeagleBone Black.  
+The `CHardware` class serves as the **host and entry point** to all hardware functionality on the BeagleBone Black.  
 It aggregates and coordinates access to sensors, motor control, ADC readings, and GPIO-based brake handling.
 
 #### Responsibilities

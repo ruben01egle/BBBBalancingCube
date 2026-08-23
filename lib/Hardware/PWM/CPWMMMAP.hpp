@@ -4,9 +4,7 @@
  *  Created on: May 26, 2023
  *      Author: Knut
  */
-
-#ifndef CPWMMMAP_HPP
-#define CPWMMMAP_HPP
+#pragma once
 
 #include <fcntl.h>
 #include <sys/mman.h>
@@ -97,5 +95,3 @@ private:
 	// Trip-Zone Submodule
 	const uint8_t OFFS_TZCTL;			// Control
 };
-
-#endif

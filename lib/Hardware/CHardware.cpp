@@ -4,7 +4,7 @@
 
 using namespace Cube;
 
-CBBBHardware::CBBBHardware():	mSensor1(IMU_SPI_MODULE, IMU1_SPI_CHANNEL, IMU_SPI_CHANNEL_CFG),
+CHardware::CHardware():	mSensor1(IMU_SPI_MODULE, IMU1_SPI_CHANNEL, IMU_SPI_CHANNEL_CFG),
 								mSensor2(IMU_SPI_MODULE, IMU2_SPI_CHANNEL, IMU_SPI_CHANNEL_CFG),
 								mMotor(MOTOR_PWM_MODULE,
                                        MOTOR_PWM_PIN,
@@ -20,7 +20,7 @@ CBBBHardware::CBBBHardware():	mSensor1(IMU_SPI_MODULE, IMU1_SPI_CHANNEL, IMU_SPI
 }
 
 
-bool CBBBHardware::init()
+bool CHardware::init()
 {
 	if (mSensor1.initImu(IMU_SETUP) != CMPU9250::Status::OKAY) {
 		return false;
@@ -36,7 +36,7 @@ bool CBBBHardware::init()
     return true;
 }
 
-bool CBBBHardware::fetchValues(uint16_t& adcValue,
+bool CHardware::fetchValues(uint16_t& adcValue,
 		 CIMUData& sensor1Data,
 		 CIMUData& sensor2Data)
 {
@@ -71,7 +71,7 @@ bool CBBBHardware::fetchValues(uint16_t& adcValue,
 
 }
 
-bool CBBBHardware::enableMotor()
+bool CHardware::enableMotor()
 {
 	if (mMotor.enable() != CMaxonMotor::Status::OKAY){
 		return false;
@@ -79,7 +79,7 @@ bool CBBBHardware::enableMotor()
 	return true;
 }
 
-bool CBBBHardware::disableMotor()
+bool CHardware::disableMotor()
 {
 	if (mMotor.disable() != CMaxonMotor::Status::OKAY) {
 		return false;
@@ -87,7 +87,7 @@ bool CBBBHardware::disableMotor()
 	return true;
 }
 
-bool CBBBHardware::setTorque(float torque)
+bool CHardware::setTorque(float torque)
 {
 	if (mMotor.setTorque(torque) != CMaxonMotor::Status::OKAY) {
 		return false;

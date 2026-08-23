@@ -3,10 +3,11 @@
  * @date	8.12.2016
  * @brief	Structure to hold all the content of the CContainer.
  */
-#ifndef CCONTENT_H
-#define CCONTENT_H
-#include "CStateVectorData.h"
-#include "CIMUData.h"
+#pragma once
+
+#include <cstdint>
+#include "CStateVectorData.hpp"
+#include "CIMUData.hpp"
 
 class CContent
 {
@@ -19,5 +20,3 @@ public:
 	uint16_t mADCValue;
 	uint16_t mPadding;
 };
-
-#endif

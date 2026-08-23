@@ -1,12 +1,11 @@
-#ifndef CBBBHARDWARE_HPP
-#define CBBBHARDWARE_HPP
+#pragma once
 
 #include <cstdint>
 #include "CMaxonMotor.hpp"
 #include "CMPU9250.hpp"
-#include "CIMUData.h"
+#include "CIMUData.hpp"
 
-class CBBBHardware
+class CHardware
 {
 public:
 	bool fetchValues(uint16_t& adcValue,
@@ -17,11 +16,9 @@ public:
 	bool setTorque(float torque);
 
 public:
-	CBBBHardware();
+	CHardware();
 	bool init();
 private:
 	CMPU9250 mSensor1, mSensor2;
 	CMaxonMotor mMotor;
 };
-
-#endif

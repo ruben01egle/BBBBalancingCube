@@ -1,5 +1,4 @@
-#ifndef CGPIOMMAP_HPP
-#define CGPIOMMAP_HPP
+#pragma once
 
 #include <cstdint>
 #include <mutex>
@@ -54,7 +53,3 @@ private:
 	// read-modify-write against concurrent init() calls on pins of the same bank.
 	static std::mutex mOEMutex;
 };
-
-
-
-#endif /* HARDWARE_CGPIOMMAP_H_ */

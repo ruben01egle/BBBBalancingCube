@@ -4,9 +4,9 @@
  * @date	28.9.2016
  * @brief	Class definition for a thread-carrier.
  */
-#ifndef CTHREAD_H
-#define CTHREAD_H
-#include "IRunnable.h"
+#pragma once
+
+#include "IRunnable.hpp"
 #include <pthread.h>
 
 class CThread
@@ -32,7 +32,7 @@ public:
 	        PRIORITY_REALTIME 		= 63
 	     };
 public:
-	void start();
+	bool start();
 	void join();
 private:
 	friend void* threadProc(void*);
@@ -44,6 +44,5 @@ private:
 	pthread_t mThreadID;
 	IRunnable* mRunablePtr;
 	EPriority mPrioBase;
+	bool mStarted = false;
 };
-
-#endif

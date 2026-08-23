@@ -4,9 +4,7 @@
  *  Created on: Aug 19, 2023
  *      Author: Knut
  */
-
-#ifndef CSPICHANNELCONFIG_HPP
-#define CSPICHANNELCONFIG_HPP
+#pragma once
 
 #include <cstdint>
 
@@ -63,7 +61,3 @@ public:
 	// word length: 4 to 32 bit is supported
 	uint8_t wordLength;
 };
-
-
-
-#endif

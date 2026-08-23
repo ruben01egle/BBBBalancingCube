@@ -4,10 +4,9 @@
  * @date	28.9.2016
  * @brief	Method definitions for CThread.
  */
-#include "CThread.h"
+#include "CThread.hpp"
 #include <cstdint>
 #include <unistd.h>
-#include <cstdlib>
 
 #include "CErrorReporter.hpp"
 
@@ -26,12 +25,14 @@ CThread::CThread(IRunnable* runnablePtr,
 {
 
 }
-void CThread::start()
+bool CThread::start()
 {
 	struct sched_param threadparam;
 	int max = sched_get_priority_max(SCHED_RR);
 	int min = sched_get_priority_min(SCHED_RR);
-	int32_t realPrio = min + (max - min)/(PRIORITY_REALTIME + 1)*mPrioBase;
+	int32_t realPrio = min + mPrioBase * (max - min) / (PRIORITY_REALTIME + 1);
+	if (realPrio < min) realPrio = min;
+	if (realPrio > max) realPrio = max;
 
 	//Configure the scheduling policy as Round-Robin
 	pthread_attr_t attribute;
@@ -45,14 +46,16 @@ void CThread::start()
 
 	int ret = pthread_create(&mThreadID, &attribute, threadProc, this);
 
-	//Temrminate the application in case the creation of the thread failed
-	if(ret != 0)
-	{
-		REPORT_ERROR("pthread_create() failed! ret: ", ret, " exiting...");
-		exit(-1);
-	}
 	//Cleanup
 	pthread_attr_destroy(&attribute);
+
+	if(ret != 0)
+	{
+		REPORT_ERROR("pthread_create() failed! ret: ", ret);
+		return false;
+	}
+	mStarted = true;
+	return true;
 }
 void CThread::run()
 {
@@ -61,6 +64,8 @@ void CThread::run()
 }
 void CThread::join()
 {
-	pthread_join(mThreadID, NULL);
+	if (mStarted) {
+		pthread_join(mThreadID, NULL);
+	}
 }
 

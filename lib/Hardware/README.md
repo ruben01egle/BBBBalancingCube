@@ -4,7 +4,7 @@ Low-level, register/mmap-based drivers for the physical peripherals of the Beagl
 
 ```
 Hardware/
-├── CHardware.hpp/.cpp        # CBBBHardware — entry point, aggregates everything below
+├── CHardware.hpp/.cpp        # CHardware — entry point, aggregates everything below
 ├── CInterfaceManager.hpp     # generic singleton/registry used by every driver below
 ├── ADC/                      # CADCMMAP — AM335x ADC_TSC register driver
 ├── GPIO/                     # CGPIOMMAP — AM335x GPIO register driver
@@ -18,9 +18,9 @@ Hardware/
 
 For flashing/setting up the BBB image itself, see [BBB_IMAGE_README.md](BBB_IMAGE_README.md). Each subfolder above has its own `README.md` covering the class(es) it contains, their configuration structs, and known gotchas — read those before wiring up a new pin/peripheral. Pin assignments and device tree overlay setup are covered further down in this file.
 
-## Entry point: `CBBBHardware`
+## Entry point: `CHardware`
 
-[CHardware.hpp](CHardware.hpp) / [CHardware.cpp](CHardware.cpp) define `CBBBHardware`, the single object the rest of the application talks to. It owns two `CMPU9250` sensors and one `CMaxonMotor`, wires them up from the pin/module constants in [`CubeConstants.hpp`](../../include/CubeConstants.hpp), and exposes:
+[CHardware.hpp](CHardware.hpp) / [CHardware.cpp](CHardware.cpp) define `CHardware`, the single object the rest of the application talks to. It owns two `CMPU9250` sensors and one `CMaxonMotor`, wires them up from the pin/module constants in [`CubeConstants.hpp`](../../include/CubeConstants.hpp), and exposes:
 
 | Function | Description |
 |----------|-------------|

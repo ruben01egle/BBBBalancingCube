@@ -24,9 +24,7 @@
  *  	-> CS-Channel1: P9_19 / P9_42
  *
  */
-
-#ifndef CSPIMODULEMMAP_HPP
-#define CSPIMODULEMMAP_HPP
+#pragma once
 
 #include <cstdint>
 #include "CSPIChannelConfig.hpp"
@@ -99,7 +97,3 @@ private:
 
 	std::optional<CSPIChannelConfig> mChannelConfig[2];
 };
-
-
-
-#endif /* CSPIMODULEMMAP_H_ */

@@ -4,7 +4,7 @@
  * @date 24.9.2016
  * @brief Method definitions for a binary semaphore, which is simulated using a mutex.
  */
-#include "CBinarySemaphore.h"
+#include "CBinarySemaphore.hpp"
 #include "CErrorReporter.hpp"
 
 CBinarySemaphore::CBinarySemaphore() : mCounter(1)
@@ -67,6 +67,7 @@ bool CBinarySemaphore::init(bool pIsFull, bool pIsProcessShared)
 CBinarySemaphore::~CBinarySemaphore()
 {
 	pthread_mutex_destroy(&mMutex);
+	pthread_cond_destroy(&mCondition);
 }
 
 bool CBinarySemaphore::take(bool waitForever)

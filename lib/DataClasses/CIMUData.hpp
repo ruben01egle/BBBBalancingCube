@@ -3,8 +3,8 @@
  * @date	23.03.22
  * @brief	Method definition for CIMUData.
  */
-#ifndef CIMUDATA_H
-#define CIMUDATA_H
+#pragma once
+
 #include <cstdint>
 
 class CIMUData
@@ -34,5 +34,3 @@ public:
 };
 
 static_assert(sizeof(CIMUData) == 12, "CIMUData size mismatch! Check alignment.");
-
-#endif

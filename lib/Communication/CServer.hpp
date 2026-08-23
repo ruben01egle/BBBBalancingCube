@@ -1,8 +1,7 @@
-#ifndef CSERVER_HPP
-#define CSERVER_HPP
+#pragma once
 
 #include <cstdint>
-#include "CContent.h"
+#include "CContent.hpp"
 #include <netinet/in.h>
 
 class CServer
@@ -20,7 +19,4 @@ private:
 	int mConnectedSocketFD;
 	socklen_t mClientLen;
 	struct sockaddr_in mClientAddr;
-	bool mConnected;
 };
-
-#endif

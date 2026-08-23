@@ -1,5 +1,4 @@
-#ifndef CCALIBRATION_H
-#define CCALIBRATION_H
+#pragma once
 
 class CCalibration
 {
@@ -29,5 +28,3 @@ public:
     // Angle offset
     float mPhiOffset;
 };
-
-#endif

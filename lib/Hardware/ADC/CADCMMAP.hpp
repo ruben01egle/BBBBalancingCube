@@ -1,5 +1,4 @@
-#ifndef CADCMMAP_HPP
-#define CADCMMAP_HPP
+#pragma once
 
 #include <cstdint>
 #include <array>
@@ -100,5 +99,3 @@ private:
 	static constexpr uint32_t OFFS_FIFO0DATA			= 0x100;
 	static constexpr uint32_t OFFS_FIFO1DATA			= 0x200;
 };
-
-#endif

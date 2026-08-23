@@ -1,4 +1,4 @@
-#include "CLoopTimer.h"
+#include "CLoopTimer.hpp"
 
 #include "CErrorReporter.hpp"
 

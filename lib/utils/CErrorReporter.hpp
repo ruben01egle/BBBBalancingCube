@@ -5,7 +5,7 @@
 #include <sstream>
 #include <errno.h>
 
-class ErrorReporter {
+class CErrorReporter {
 private:
     template<typename T>
     static void appendToStream(std::ostringstream& oss, const T& value) {
@@ -40,5 +40,5 @@ public:
     }
 };
 
-#define REPORT_ERROR(...) ErrorReporter::logError(__FILE__, __LINE__, __FUNCTION__, __VA_ARGS__)
-#define REPORT_ERROR_ERRNO(...) ErrorReporter::logErrorErrno(__FILE__, __LINE__, __FUNCTION__, __VA_ARGS__)
+#define REPORT_ERROR(...) CErrorReporter::logError(__FILE__, __LINE__, __FUNCTION__, __VA_ARGS__)
+#define REPORT_ERROR_ERRNO(...) CErrorReporter::logErrorErrno(__FILE__, __LINE__, __FUNCTION__, __VA_ARGS__)
