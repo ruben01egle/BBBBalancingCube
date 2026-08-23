@@ -77,7 +77,7 @@ Search and install the following extensions in VS Code:
 
 - `C/C++` (by Microsoft) – for IntelliSense and debugging  
 - `Makefile Tools` – for make-based builds  
-- `Task Explorer` by `Scott Meesseman` – to execute tasks from the primary sidebar with one click
+- `Task Runner` by `Sanja Ajani` – to execute tasks from the primary sidebar with one click
 
 ### 4. Open the Project Folder
 
@@ -144,7 +144,7 @@ Use the pre defined tasks in VSCode or the script `manage_cube.sh` to launch tas
 ```python
 plotter = PlotManager(mode="state")
 ...
-recorder = DataRecorder(file_path, mode="imu+state")
+recorder = DataRecorder(file_path, mode="all")
 ```
 ---
 

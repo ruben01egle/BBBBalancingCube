@@ -96,18 +96,21 @@ CServer::CServer() : mSocketFD(-1),
 
 CServer::~CServer()
 {
-	int32_t retVal = shutdown(mConnectedSocketFD, SHUT_RDWR);
-	if (retVal < 0) {
-		REPORT_ERROR_ERRNO("Failed to shutdown socket");
-	}
+	if (mConnectedSocketFD >= 0) {
+        if (shutdown(mConnectedSocketFD, SHUT_RDWR) < 0 && errno != ENOTCONN) {
+            REPORT_ERROR_ERRNO("Failed to shutdown socket");
+        }
 
-	retVal = close(mConnectedSocketFD);
-	if (retVal < 0) {
-		REPORT_ERROR_ERRNO("Failed to close connected socket");
-	}
+        if (close(mConnectedSocketFD) < 0) {
+            REPORT_ERROR_ERRNO("Failed to close connected socket");
+        }
+        mConnectedSocketFD = -1;
+    }
 
-	retVal = close(mSocketFD);
-	if (retVal < 0) {
-		REPORT_ERROR_ERRNO("Failed to close socket");
-	}
+    if (mSocketFD >= 0) {
+        if (close(mSocketFD) < 0) {
+            REPORT_ERROR_ERRNO("Failed to close socket");
+        }
+        mSocketFD = -1;
+    }
 }
