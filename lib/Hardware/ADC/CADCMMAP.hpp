@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <array>
 #include <queue>
+#include <mutex>
 
 #include "CADCConfig.hpp"
 
@@ -45,6 +46,8 @@ private:
 	uint8_t* mMapPtr;
 
 	static std::array<std::queue<uint16_t>, NUM_STEPS> mValueQueues;
+	// guards mValueQueues, which is shared by every CADCMMAP instance (one per ADC step)
+	static std::mutex mQueueMutex;
 
 private:
 	static constexpr uint32_t ADDR_START				= 0x44E0D000U;
@@ -53,6 +56,9 @@ private:
 
 	static constexpr uint32_t MASK_STEP_IDX				= 0b11110000000000000000U;
 	static constexpr uint32_t MASK_DATA					= 0b111111111111U;
+
+	// STEPCONFIG bit field: select single-ended sampling mode with internal reference voltage
+	static constexpr uint32_t STEPCONFIG_SEL_INP_MODE	= 0x08U << 15;
 
 	static constexpr uint32_t OFFS_REVISION 			= 0x00;
 	static constexpr uint32_t OFFS_SYSCONFIG			= 0x10;

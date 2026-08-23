@@ -121,6 +121,10 @@ CMaxonMotor::Status CMaxonMotor::disable()
 
 CMaxonMotor:: Status CMaxonMotor::setTorque(double pTorque)
 {
+    if (mDirectionPin == nullptr) {
+        return Status::HARDWARE_ERROR;
+    }
+
     if (pTorque >= 0) {
         mDirectionPin->setLow();
     }
@@ -136,6 +140,9 @@ CMaxonMotor:: Status CMaxonMotor::setTorque(double pTorque)
 
 CMaxonMotor::Status CMaxonMotor::getRawVelocity(uint16_t& pRawVelocity)
 {
+    if (mADC == nullptr) {
+        return Status::HARDWARE_ERROR;
+    }
     if (mADC->readADC(pRawVelocity) != CADCMMAP::Status::OKAY) {
         return Status::HARDWARE_ERROR;
     }

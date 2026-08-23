@@ -5,6 +5,7 @@
 #include <sstream>
 #include <dirent.h>
 #include <climits>
+#include <algorithm>
 #include "CErrorReporter.hpp"
 
 using namespace std;
@@ -83,10 +84,26 @@ CPWMMMAP::~CPWMMMAP() {
 
 CPWMMMAP::Status CPWMMMAP::init(uint8_t pPWMPin, CPWMModuleConfig pModuleConfig)
 {
+    if (mPWMModule >= 3) {
+        REPORT_ERROR("Invalid PWM module index ", static_cast<int>(mPWMModule));
+        return Status::INVALID_MODULE;
+    }
+
     // The time-base is shared by both pins of a module. Only run the mmap/clock/timebase setup
     // once per module -- redoing it for a second pin would leak the previous mapping and glitch
     // the already-running pin's output.
     bool moduleAlreadyInitialized = (mapPtr != nullptr && mapPtr != MAP_FAILED);
+
+    if (moduleAlreadyInitialized) {
+        // The time-base (frequency) is a module-wide resource shared by both pins -- a second
+        // pin requesting a different frequency than the one already applied would silently be
+        // ignored below, so reject it explicitly instead.
+        uint8_t otherPin = (pPWMPin == 0) ? 1 : 0;
+        if (mModuleConfig[otherPin].has_value() && mModuleConfig[otherPin].value() != pModuleConfig) {
+            REPORT_ERROR("PWM module ", static_cast<int>(mPWMModule), " already initialized with a conflicting configuration");
+            return Status::MODULE_CONFIG_CONFLICT;
+        }
+    }
 
     if (!moduleAlreadyInitialized) {
         int mMemoryFD = open("/dev/mem", O_RDWR | O_SYNC);
@@ -123,6 +140,8 @@ CPWMMMAP::Status CPWMMMAP::init(uint8_t pPWMPin, CPWMModuleConfig pModuleConfig)
         if(ctrlPtr != MAP_FAILED) {
             *reinterpret_cast<volatile uint32_t*>(ctrlPtr + OFFS_CTRLMOD_PWM) |= (0x1 << mPWMModule);
             munmap(ctrlPtr, MAP_SIZE_CTRLMOD);
+        } else {
+            REPORT_ERROR_ERRNO("unable to mmap control module");
         }
 
         // 3. PWM Base mmap
@@ -219,7 +238,7 @@ CPWMMMAP::Status CPWMMMAP::init(uint8_t pPWMPin, CPWMModuleConfig pModuleConfig)
     }
     close(enable_fd);
 
-    setHighLowActive(pModuleConfig.mActiveHigh);
+    setHighLowActive(pPWMPin, pModuleConfig.mActiveHigh);
 
     mModuleConfig[pPWMPin] = pModuleConfig;
     return Status::OKAY;
@@ -227,6 +246,11 @@ CPWMMMAP::Status CPWMMMAP::init(uint8_t pPWMPin, CPWMModuleConfig pModuleConfig)
 
 CPWMMMAP::Status CPWMMMAP::setDutyCycle(uint8_t pPWMPin, double pDutyCyclePercent)
 {
+    // Clamp before use: an out-of-range value here would either overshoot mCurrentPeriod or,
+    // for a negative value, hit undefined behavior on the cast to uint32_t below -- this is the
+    // last line of defense before the value reaches the motor driver's gate signal.
+    pDutyCyclePercent = std::clamp(pDutyCyclePercent, 0.0, 100.0);
+
     // Compute integer tick duty cycle
     mCurrentDutyCycle = static_cast<uint32_t>(mCurrentPeriod * (pDutyCyclePercent / 100.0));
 
@@ -274,12 +298,16 @@ CPWMMMAP::Status CPWMMMAP::setFrequency(uint32_t pFrequencyHz) {
     return Status::OKAY;
 }
 
-void CPWMMMAP::setHighLowActive(bool pActiveHigh) {
-    if(pActiveHigh) {
-        *reinterpret_cast<volatile uint16_t*>(mapPtr + PWM_OFFS + OFFS_AQCTLA) = 0x12;
-        *reinterpret_cast<volatile uint16_t*>(mapPtr + PWM_OFFS + OFFS_AQCTLB) = 0x102;
+void CPWMMMAP::setHighLowActive(uint8_t pPWMPin, bool pActiveHigh) {
+    // Only touch the register of the requested pin -- the time-base is shared by both pins of a
+    // module, but AQCTLA/AQCTLB (and hence output polarity) are independent per pin. Writing both
+    // here would silently flip the polarity of the other, already-running pin.
+    uint32_t offs = (pPWMPin == 0) ? OFFS_AQCTLA : OFFS_AQCTLB;
+    uint16_t val;
+    if (pActiveHigh) {
+        val = (pPWMPin == 0) ? 0x12 : 0x102;
     } else {
-        *reinterpret_cast<volatile uint16_t*>(mapPtr + PWM_OFFS + OFFS_AQCTLA) = 0x24;
-        *reinterpret_cast<volatile uint16_t*>(mapPtr + PWM_OFFS + OFFS_AQCTLB) = 0x24;
+        val = 0x24;
     }
+    *reinterpret_cast<volatile uint16_t*>(mapPtr + PWM_OFFS + offs) = val;
 }

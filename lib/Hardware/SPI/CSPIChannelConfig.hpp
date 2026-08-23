@@ -31,7 +31,7 @@ public:
 public:
 	// CLOCK SETTINGS
 	// SCLK_Frequency: frequencies are supported within the range
-	// 11.719 Hz until 48.000.000 Hz
+	// 11.719 kHz until 48.000.000 Hz (the divider is a 12-bit field: 48MHz / 4096)
 	int sclk_Frequency_Hz;
 
 	// SCLKHighActive: polarity of clock signal (true = SPI-Modes 0/1) high active

@@ -3,10 +3,19 @@
 #include <sys/mman.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <ctime>
 
 #include "CErrorReporter.hpp"
 
+namespace {
+    // ONESHOT conversions on a healthy step complete within microseconds; this floor is
+    // generous headroom so a stalled/misconfigured step still fails fast instead of hanging
+    // the calling thread (the motor current/velocity feedback read) forever.
+    constexpr long ONESHOT_TIMEOUT_USEC = 100000L;
+}
+
 std::array<std::queue<uint16_t>, CADCMMAP::NUM_STEPS> CADCMMAP::mValueQueues;
+std::mutex CADCMMAP::mQueueMutex;
 
 CADCMMAP::CADCMMAP(uint8_t pStepNumber)
 {
@@ -67,11 +76,35 @@ CADCMMAP::Status CADCMMAP::readADC(uint16_t& pValue)
     switch (mADCConfig.mode)
     {
     case CADCConfig::Mode::ONESHOT:
+    {
         setBits(OFFS_STEPENABLE, 0x01 << mStepIdx);
-        while (mValueQueues[mStepIdx-1].empty()) {
+
+        struct timespec deadline;
+        clock_gettime(CLOCK_MONOTONIC, &deadline);
+        deadline.tv_nsec += ONESHOT_TIMEOUT_USEC * 1000L;
+        deadline.tv_sec += deadline.tv_nsec / 1000000000L;
+        deadline.tv_nsec %= 1000000000L;
+
+        bool haveValue = false;
+        while (!haveValue) {
             readFifo();
+            {
+                std::lock_guard<std::mutex> lock(mQueueMutex);
+                haveValue = !mValueQueues[mStepIdx-1].empty();
+            }
+            if (haveValue) {
+                break;
+            }
+            struct timespec now;
+            clock_gettime(CLOCK_MONOTONIC, &now);
+            if (now.tv_sec > deadline.tv_sec ||
+                    (now.tv_sec == deadline.tv_sec && now.tv_nsec >= deadline.tv_nsec)) {
+                REPORT_ERROR("ADC oneshot read timed out on step ", static_cast<int>(mStepIdx));
+                return Status::NO_VALUE;
+            }
         }
         break;
+    }
 
     case CADCConfig::Mode::CONTINUOUS:
         readFifo();
@@ -81,13 +114,16 @@ CADCMMAP::Status CADCMMAP::readADC(uint16_t& pValue)
     }
 
     bool newVal = false;
-    // Only returns latest value, all other values are discarted
-    while (!mValueQueues[mStepIdx-1].empty()) {
-        pValue = mValueQueues[mStepIdx-1].front();
-        mValueQueues[mStepIdx-1].pop();
-        newVal = true;
+    {
+        std::lock_guard<std::mutex> lock(mQueueMutex);
+        // Only returns latest value, all other values are discarted
+        while (!mValueQueues[mStepIdx-1].empty()) {
+            pValue = mValueQueues[mStepIdx-1].front();
+            mValueQueues[mStepIdx-1].pop();
+            newVal = true;
+        }
     }
-    
+
     if (!newVal) {
         REPORT_ERROR("No new value available");
         return Status::NO_VALUE;
@@ -119,6 +155,7 @@ void CADCMMAP::readFifo()
     uint32_t regValue;
     uint32_t stepIdx;
     uint16_t data;
+    std::lock_guard<std::mutex> lock(mQueueMutex);
     while (readRegister(fifoCountOffset) > 0) {
         regValue = readRegister(fifoDataOffset);
         stepIdx = (regValue & MASK_STEP_IDX) >> 16;
@@ -133,33 +170,33 @@ void CADCMMAP::readFifo()
 
 uint32_t CADCMMAP::readRegister(const uint32_t pAddrOffset)
 {
-    return *reinterpret_cast<uint32_t*>(mMapPtr + pAddrOffset);
+    return *reinterpret_cast<volatile uint32_t*>(mMapPtr + pAddrOffset);
 }
 
 void CADCMMAP::writeRegister(const uint32_t pAddrOffset, const uint32_t pValue)
 {
-    *reinterpret_cast<uint32_t*>(mMapPtr + pAddrOffset) = pValue;
+    *reinterpret_cast<volatile uint32_t*>(mMapPtr + pAddrOffset) = pValue;
 }
 
 void CADCMMAP::setBits(const uint32_t pAddrOffset, const uint32_t pBitMask)
 {
     uint32_t regValue = readRegister(pAddrOffset);
     regValue |= pBitMask;
-    *reinterpret_cast<uint32_t*>(mMapPtr + pAddrOffset) = regValue;
+    *reinterpret_cast<volatile uint32_t*>(mMapPtr + pAddrOffset) = regValue;
 }
 
 void CADCMMAP::clearBits(const uint32_t pAddrOffset, const uint32_t pBitMask)
 {
     uint32_t regValue = readRegister(pAddrOffset);
     regValue &= ~pBitMask;
-    *reinterpret_cast<uint32_t*>(mMapPtr + pAddrOffset) = regValue;
+    *reinterpret_cast<volatile uint32_t*>(mMapPtr + pAddrOffset) = regValue;
 }
 
 CADCMMAP::Status CADCMMAP::configStep()
 {
     setBits(OFFS_CTRL, 0x01 << 2U);
 
-    uint32_t regValueCfg = 0x08 << 15;                             // select single ended mode with internal ref voltage
+    uint32_t regValueCfg = STEPCONFIG_SEL_INP_MODE;
     regValueCfg |= static_cast<uint32_t>(mADCConfig.averaging);
     regValueCfg |= static_cast<uint32_t>(mADCConfig.channel);
     regValueCfg |= static_cast<uint32_t>(mADCConfig.mode);

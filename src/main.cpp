@@ -1,6 +1,7 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
+#include <cstdlib>
 
 using namespace std;
 
@@ -12,7 +13,7 @@ int main(){
 
 	CBBBHardware hw;
     if (!hw.init()) {
-        return false;
+        return EXIT_FAILURE;
     }
     cout << "init done" << endl;
 	CIMUData imu1_data;

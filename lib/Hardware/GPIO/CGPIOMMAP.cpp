@@ -17,6 +17,8 @@
 
 #include "CErrorReporter.hpp"
 
+std::mutex CGPIOMMAP::mOEMutex;
+
 CGPIOMMAP::CGPIOMMAP(uint8_t pGPIONumber) :
 					mapPtr				(NULL),
 					ADDR_START_CM_PER	(0x44E00000U),
@@ -30,7 +32,7 @@ CGPIOMMAP::CGPIOMMAP(uint8_t pGPIONumber) :
 					OFFS_OE				(0x134U),
 					OFFS_DATA_IN		(0x138U),
 					OFFS_CLEAR_DOUT		(0x190U),
-					OFFS_SET_DOUT		(0x194U) 
+					OFFS_SET_DOUT		(0x194U)
 {
 	mGPIOModuleIndex = pGPIONumber/32;
 	mGPIOPinIndex = pGPIONumber % 32;
@@ -38,16 +40,27 @@ CGPIOMMAP::CGPIOMMAP(uint8_t pGPIONumber) :
 }
 
 CGPIOMMAP::~CGPIOMMAP() {
-	if(munmap(mapPtr, MAP_SIZE_GPIOMOD) == -1) {
-		REPORT_ERROR_ERRNO("Unable to delete clock module peripheral register (WKUP) mapping");
+	if (mapPtr != nullptr && mapPtr != MAP_FAILED) {
+		if(munmap(mapPtr, MAP_SIZE_GPIOMOD) == -1) {
+			REPORT_ERROR_ERRNO("Unable to delete GPIO module mapping");
+		}
 	}
 }
 
 CGPIOMMAP::Status CGPIOMMAP::init( bool pOutput)
 {
+	if (mGPIOModuleIndex >= 4) {
+		REPORT_ERROR("GPIO module index out of range");
+		return Status::CONFIG_ERROR;
+	}
+
 	mOutput = pOutput;
 	// mmap to required memory space for CM_PER
 	int mMemoryFD = open("/dev/mem", O_RDWR | O_SYNC);
+	if (mMemoryFD < 0) {
+		REPORT_ERROR_ERRNO("unable to open /dev/mem");
+		return Status::MMAP_ERROR;
+	}
 	if(mGPIOModuleIndex != 0) {
 		// mmap registers for required clock module
 		mapPtr = reinterpret_cast<uint8_t*>(mmap(0,					// start address for new mapping
@@ -57,22 +70,25 @@ CGPIOMMAP::Status CGPIOMMAP::init( bool pOutput)
 				mMemoryFD,											// mem filedescriptor
 				ADDR_START_CM_PER));								// start address in mem file
 
-		if(mapPtr == ((uint8_t*)-1)) {								// check for successful mapping
+		if(mapPtr == MAP_FAILED) {								// check for successful mapping
 			REPORT_ERROR_ERRNO("Unable to mmap clock module peripheral registers");
+			close(mMemoryFD);
 			return Status::MMAP_ERROR;
 		}
 
 		// enable device
-		*reinterpret_cast<uint32_t*>(mapPtr+OFFS_CM_GPIO[mGPIOModuleIndex]) |= 0x2;
+		*reinterpret_cast<volatile uint32_t*>(mapPtr+OFFS_CM_GPIO[mGPIOModuleIndex]) |= 0x2;
 
 		// wait until device is enabled, abort if this takes longer than 1 second.
 		int counter = 0;
-		while((*reinterpret_cast<uint32_t*>(mapPtr+OFFS_CM_GPIO[mGPIOModuleIndex]) & 0x00030000) != 0x0) {
+		while((*reinterpret_cast<volatile uint32_t*>(mapPtr+OFFS_CM_GPIO[mGPIOModuleIndex]) & 0x00030000) != 0x0) {
 			usleep(1);
 
 			counter++;
 			if(counter > 1E6) {
 				REPORT_ERROR("Can not enable gpio module");
+				munmap(mapPtr, MAP_SIZE_CM_PER);
+				close(mMemoryFD);
 				return Status::MMAP_ERROR;
 			}
 		}
@@ -80,6 +96,7 @@ CGPIOMMAP::Status CGPIOMMAP::init( bool pOutput)
 		// delete mapping and check if operation is successful
 		if(munmap(mapPtr, MAP_SIZE_CM_PER) == -1) {
 			REPORT_ERROR_ERRNO("Unable to delete clock module peripheral register mapping");
+			close(mMemoryFD);
 			return Status::MMAP_ERROR;
 		}
 	} else {	// mGPIOModulIndex == 0
@@ -91,22 +108,25 @@ CGPIOMMAP::Status CGPIOMMAP::init( bool pOutput)
 				mMemoryFD,											// mem filedescriptor
 				ADDR_START_CM_WKUP));								// start address in mem file
 
-		if(mapPtr == ((uint8_t*)-1)) {								// check for successful mapping
+		if(mapPtr == MAP_FAILED) {								// check for successful mapping
 			REPORT_ERROR_ERRNO("Unable to mmap clock module peripheral registers (WKUP)");
+			close(mMemoryFD);
 			return Status::MMAP_ERROR;
 		}
 
 		// enable device
-		*reinterpret_cast<uint32_t*>(mapPtr+OFFS_CM_GPIO[mGPIOModuleIndex]) |= 0x2;
+		*reinterpret_cast<volatile uint32_t*>(mapPtr+OFFS_CM_GPIO[mGPIOModuleIndex]) |= 0x2;
 
 		// wait until device is enabled, abort if this takes longer than 1 second.
 		int counter = 0;
-		while((*reinterpret_cast<uint32_t*>(mapPtr+OFFS_CM_GPIO[mGPIOModuleIndex]) & 0x00030000) != 0x0) {
+		while((*reinterpret_cast<volatile uint32_t*>(mapPtr+OFFS_CM_GPIO[mGPIOModuleIndex]) & 0x00030000) != 0x0) {
 			usleep(1);
 
 			counter++;
 			if(counter > 1E6) {
 				REPORT_ERROR_ERRNO("Can not enable gpio module");
+				munmap(mapPtr, MAP_SIZE_CM_WKUP);
+				close(mMemoryFD);
 				return Status::MMAP_ERROR;
 			}
 		}
@@ -114,6 +134,7 @@ CGPIOMMAP::Status CGPIOMMAP::init( bool pOutput)
 		// delete mapping and check if operation is successful
 		if(munmap(mapPtr, MAP_SIZE_CM_WKUP) == -1) {
 			REPORT_ERROR_ERRNO("Unable to delete clock module peripheral register (WKUP) mapping");
+			close(mMemoryFD);
 			return Status::MMAP_ERROR;
 		}
 	}
@@ -126,23 +147,25 @@ CGPIOMMAP::Status CGPIOMMAP::init( bool pOutput)
 			mMemoryFD,											// mem filedescriptor
 			ADDR_START_GPIOMOD[mGPIOModuleIndex]));				// start address in mem file
 
-	if(mapPtr == ((uint8_t*)-1)) {								// check for successful mapping
+	close(mMemoryFD);
+
+	if(mapPtr == MAP_FAILED) {								// check for successful mapping
 		REPORT_ERROR_ERRNO("unable to mmap GPIO-Module");
 		return Status::MMAP_ERROR;
 	}
 
-	// close filedescriptor
-	close(mMemoryFD);
-
 	// set no-idle in GPIO_SYSCONFIG
-	*reinterpret_cast<uint32_t*>(mapPtr + OFFS_SYSCONFIG) |= 0x8;
+	*reinterpret_cast<volatile uint32_t*>(mapPtr + OFFS_SYSCONFIG) |= 0x8;
 
 	// configure GPIO output abilities
-	if (mOutput) {
-		*reinterpret_cast<uint32_t*>(mapPtr + OFFS_OE) &= ~(1U << mGPIOPinIndex);
-	}
-	else {
-		*reinterpret_cast<uint32_t*>(mapPtr + OFFS_OE) |= (1U << mGPIOPinIndex);
+	{
+		std::lock_guard<std::mutex> lock(mOEMutex);
+		if (mOutput) {
+			*reinterpret_cast<volatile uint32_t*>(mapPtr + OFFS_OE) &= ~(1U << mGPIOPinIndex);
+		}
+		else {
+			*reinterpret_cast<volatile uint32_t*>(mapPtr + OFFS_OE) |= (1U << mGPIOPinIndex);
+		}
 	}
 
 	return Status::OKAY;
@@ -152,7 +175,7 @@ CGPIOMMAP::Status CGPIOMMAP::setHigh() {
 	if (!mOutput) {
 		return Status::CONFIG_ERROR;
 	}
-	*reinterpret_cast<uint32_t*>(mapPtr + OFFS_SET_DOUT) = (0x1 << mGPIOPinIndex);
+	*reinterpret_cast<volatile uint32_t*>(mapPtr + OFFS_SET_DOUT) = (0x1 << mGPIOPinIndex);
 	return Status::OKAY;
 }
 
@@ -160,10 +183,10 @@ CGPIOMMAP::Status CGPIOMMAP::setLow() {
 	if (!mOutput) {
 		return Status::CONFIG_ERROR;
 	}
-	*reinterpret_cast<uint32_t*>(mapPtr + OFFS_CLEAR_DOUT) = (0x1 << mGPIOPinIndex);
+	*reinterpret_cast<volatile uint32_t*>(mapPtr + OFFS_CLEAR_DOUT) = (0x1 << mGPIOPinIndex);
 	return Status::OKAY;
 }
 
 bool CGPIOMMAP::getCurrentState() {
-	return ((*reinterpret_cast<uint32_t*>(mapPtr + OFFS_DATA_IN) >> mGPIOPinIndex) & 0x1);
+	return ((*reinterpret_cast<volatile uint32_t*>(mapPtr + OFFS_DATA_IN) >> mGPIOPinIndex) & 0x1);
 }

@@ -2,6 +2,7 @@
 #define CGPIOMMAP_HPP
 
 #include <cstdint>
+#include <mutex>
 
 // The beaglebone contains 4 (0-3) GPIO-Modules, each of these modules
 // contains 32 (0-31) pins. To specify the right GPIO-Pin in the constructor multpiply
@@ -48,6 +49,10 @@ private:
 	const uint32_t OFFS_DATA_IN;
 	const uint32_t OFFS_CLEAR_DOUT;
 	const uint32_t OFFS_SET_DOUT;
+
+	// GPIO_OE is a single 32-bit register shared by all 32 pins of a module; guards the
+	// read-modify-write against concurrent init() calls on pins of the same bank.
+	static std::mutex mOEMutex;
 };
 
 
