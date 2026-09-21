@@ -18,7 +18,7 @@ class MainWindow(QWidget):
         self.resize(800, 600)
 
         self.servo = ServoClient()
-        self.servo.connect()
+        #self.servo.connect() #is done on event trigger, not on startup
 
         # ---------------- Layout ----------------
         main_layout = QHBoxLayout()
@@ -68,7 +68,9 @@ class MainWindow(QWidget):
 
     def on_event(self, event_name, checked):
         if checked:
+            self.servo.connect()
             self.servo.send_event(event_name)
+            self.servo.disconnect()
 
     def update_frame(self):
         if not self.cap.isOpened():
