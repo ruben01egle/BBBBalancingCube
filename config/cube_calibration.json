@@ -1,0 +1,200 @@
+{
+  "cubes": [
+    {
+      "ip": "10.165.17.103",
+      "cube": 1,
+      "calibration": {
+        "imu1AccelScaleX": 1.0, "imu1AccelScaleY": 1.0,
+        "imu1AccelOffsetX": 0.0, "imu1AccelOffsetY": 0.0,
+        "imu1GyroScale": 1.0, "imu1GyroOffset": 0.0,
+        "imu2AccelScaleX": 1.0, "imu2AccelScaleY": 1.0,
+        "imu2AccelOffsetX": 0.0, "imu2AccelOffsetY": 0.0,
+        "imu2GyroScale": 1.0, "imu2GyroOffset": 0.0,
+        "adcScale": 1.0, "adcOffset": 0.0,
+        "phiOffset": 0.0
+      }
+    },
+    {
+      "ip": "10.165.17.107",
+      "cube": 2,
+      "calibration": {
+        "imu1AccelScaleX": 1.0, "imu1AccelScaleY": 1.0,
+        "imu1AccelOffsetX": 0.0, "imu1AccelOffsetY": 0.0,
+        "imu1GyroScale": 1.0, "imu1GyroOffset": 0.0,
+        "imu2AccelScaleX": 1.0, "imu2AccelScaleY": 1.0,
+        "imu2AccelOffsetX": 0.0, "imu2AccelOffsetY": 0.0,
+        "imu2GyroScale": 1.0, "imu2GyroOffset": 0.0,
+        "adcScale": 1.0, "adcOffset": 0.0,
+        "phiOffset": 0.0
+      }
+    },
+    {
+      "ip": "10.165.17.105",
+      "cube": 3,
+      "calibration": {
+        "imu1AccelScaleX": 1.0, "imu1AccelScaleY": 1.0,
+        "imu1AccelOffsetX": 0.0, "imu1AccelOffsetY": 0.0,
+        "imu1GyroScale": 1.0, "imu1GyroOffset": 0.0,
+        "imu2AccelScaleX": 1.0, "imu2AccelScaleY": 1.0,
+        "imu2AccelOffsetX": 0.0, "imu2AccelOffsetY": 0.0,
+        "imu2GyroScale": 1.0, "imu2GyroOffset": 0.0,
+        "adcScale": 1.0, "adcOffset": 0.0,
+        "phiOffset": 0.0
+      }
+    },
+    {
+      "ip": "10.165.17.109",
+      "cube": 4,
+      "calibration": {
+        "imu1AccelScaleX": 1.0, "imu1AccelScaleY": 1.0,
+        "imu1AccelOffsetX": 0.0, "imu1AccelOffsetY": 0.0,
+        "imu1GyroScale": 1.0, "imu1GyroOffset": 0.0,
+        "imu2AccelScaleX": 1.0, "imu2AccelScaleY": 1.0,
+        "imu2AccelOffsetX": 0.0, "imu2AccelOffsetY": 0.0,
+        "imu2GyroScale": 1.0, "imu2GyroOffset": 0.0,
+        "adcScale": 1.0, "adcOffset": 0.0,
+        "phiOffset": 0.0
+      }
+    },
+    {
+      "ip": "10.165.17.111",
+      "cube": 5,
+      "calibration": {
+        "imu1AccelScaleX": 1.0, "imu1AccelScaleY": 1.0,
+        "imu1AccelOffsetX": 0.0, "imu1AccelOffsetY": 0.0,
+        "imu1GyroScale": 1.0, "imu1GyroOffset": 0.0,
+        "imu2AccelScaleX": 1.0, "imu2AccelScaleY": 1.0,
+        "imu2AccelOffsetX": 0.0, "imu2AccelOffsetY": 0.0,
+        "imu2GyroScale": 1.0, "imu2GyroOffset": 0.0,
+        "adcScale": 1.0, "adcOffset": 0.0,
+        "phiOffset": 0.0
+      }
+    },
+    {
+      "ip": "10.165.17.113",
+      "cube": 6,
+      "calibration": {
+        "imu1AccelScaleX": 1.0, "imu1AccelScaleY": 1.0,
+        "imu1AccelOffsetX": 0.0, "imu1AccelOffsetY": 0.0,
+        "imu1GyroScale": 1.0, "imu1GyroOffset": 0.0,
+        "imu2AccelScaleX": 1.0, "imu2AccelScaleY": 1.0,
+        "imu2AccelOffsetX": 0.0, "imu2AccelOffsetY": 0.0,
+        "imu2GyroScale": 1.0, "imu2GyroOffset": 0.0,
+        "adcScale": 1.0, "adcOffset": 0.0,
+        "phiOffset": 0.0
+      }
+    },
+    {
+      "ip": "10.165.17.115",
+      "cube": 7,
+      "calibration": {
+        "imu1AccelScaleX": 1.0, "imu1AccelScaleY": 1.0,
+        "imu1AccelOffsetX": 0.0, "imu1AccelOffsetY": 0.0,
+        "imu1GyroScale": 1.0, "imu1GyroOffset": 0.0,
+        "imu2AccelScaleX": 1.0, "imu2AccelScaleY": 1.0,
+        "imu2AccelOffsetX": 0.0, "imu2AccelOffsetY": 0.0,
+        "imu2GyroScale": 1.0, "imu2GyroOffset": 0.0,
+        "adcScale": 1.0, "adcOffset": 0.0,
+        "phiOffset": 0.0
+      }
+    },
+    {
+      "ip": "10.165.17.117",
+      "cube": 8,
+      "calibration": {
+        "imu1AccelScaleX": 1.0, "imu1AccelScaleY": 1.0,
+        "imu1AccelOffsetX": 0.0, "imu1AccelOffsetY": 0.0,
+        "imu1GyroScale": 1.0, "imu1GyroOffset": 0.0,
+        "imu2AccelScaleX": 1.0, "imu2AccelScaleY": 1.0,
+        "imu2AccelOffsetX": 0.0, "imu2AccelOffsetY": 0.0,
+        "imu2GyroScale": 1.0, "imu2GyroOffset": 0.0,
+        "adcScale": 1.0, "adcOffset": 0.0,
+        "phiOffset": 0.0
+      }
+    },
+    {
+      "ip": "10.165.17.119",
+      "cube": 9,
+      "calibration": {
+        "imu1AccelScaleX": 1.0, "imu1AccelScaleY": 1.0,
+        "imu1AccelOffsetX": 0.0, "imu1AccelOffsetY": 0.0,
+        "imu1GyroScale": 1.0, "imu1GyroOffset": 0.0,
+        "imu2AccelScaleX": 1.0, "imu2AccelScaleY": 1.0,
+        "imu2AccelOffsetX": 0.0, "imu2AccelOffsetY": 0.0,
+        "imu2GyroScale": 1.0, "imu2GyroOffset": 0.0,
+        "adcScale": 1.0, "adcOffset": 0.0,
+        "phiOffset": 0.0
+      }
+    },
+    {
+      "ip": "10.165.17.121",
+      "cube": 10,
+      "calibration": {
+        "imu1AccelScaleX": 1.0, "imu1AccelScaleY": 1.0,
+        "imu1AccelOffsetX": 0.0, "imu1AccelOffsetY": 0.0,
+        "imu1GyroScale": 1.0, "imu1GyroOffset": 0.0,
+        "imu2AccelScaleX": 1.0, "imu2AccelScaleY": 1.0,
+        "imu2AccelOffsetX": 0.0, "imu2AccelOffsetY": 0.0,
+        "imu2GyroScale": 1.0, "imu2GyroOffset": 0.0,
+        "adcScale": 1.0, "adcOffset": 0.0,
+        "phiOffset": 0.0
+      }
+    },
+    {
+      "ip": "10.165.17.123",
+      "cube": 11,
+      "calibration": {
+        "imu1AccelScaleX": 1.0, "imu1AccelScaleY": 1.0,
+        "imu1AccelOffsetX": 0.0, "imu1AccelOffsetY": 0.0,
+        "imu1GyroScale": 1.0, "imu1GyroOffset": 0.0,
+        "imu2AccelScaleX": 1.0, "imu2AccelScaleY": 1.0,
+        "imu2AccelOffsetX": 0.0, "imu2AccelOffsetY": 0.0,
+        "imu2GyroScale": 1.0, "imu2GyroOffset": 0.0,
+        "adcScale": 1.0, "adcOffset": 0.0,
+        "phiOffset": 0.0
+      }
+    },
+    {
+      "ip": "10.165.17.125",
+      "cube": 12,
+      "calibration": {
+        "imu1AccelScaleX": 1.0, "imu1AccelScaleY": 1.0,
+        "imu1AccelOffsetX": 0.0, "imu1AccelOffsetY": 0.0,
+        "imu1GyroScale": 1.0, "imu1GyroOffset": 0.0,
+        "imu2AccelScaleX": 1.0, "imu2AccelScaleY": 1.0,
+        "imu2AccelOffsetX": 0.0, "imu2AccelOffsetY": 0.0,
+        "imu2GyroScale": 1.0, "imu2GyroOffset": 0.0,
+        "adcScale": 1.0, "adcOffset": 0.0,
+        "phiOffset": 0.0
+      }
+    },
+    {
+      "ip": "10.165.17.127",
+      "cube": 13,
+      "calibration": {
+        "imu1AccelScaleX": 1.0, "imu1AccelScaleY": 1.0,
+        "imu1AccelOffsetX": 0.0, "imu1AccelOffsetY": 0.0,
+        "imu1GyroScale": 1.0, "imu1GyroOffset": 0.0,
+        "imu2AccelScaleX": 1.0, "imu2AccelScaleY": 1.0,
+        "imu2AccelOffsetX": 0.0, "imu2AccelOffsetY": 0.0,
+        "imu2GyroScale": 1.0, "imu2GyroOffset": 0.0,
+        "adcScale": 1.0, "adcOffset": 0.0,
+        "phiOffset": 0.0
+      }
+    },
+    {
+      "ip": "10.165.17.129",
+      "cube": 14,
+      "calibration": {
+        "imu1AccelScaleX": 0.001198, "imu1AccelScaleY": 0.001198,
+        "imu1AccelOffsetX": -246.705326, "imu1AccelOffsetY": 92.506873,
+        "imu1GyroScale": 0.001064, "imu1GyroOffset": -38.782646,
+        "imu2AccelScaleX": 0.001198, "imu2AccelScaleY": 0.001198,
+        "imu2AccelOffsetX": -96.891753, "imu2AccelOffsetY": 80.694158,
+        "imu2GyroScale": 0.001064, "imu2GyroOffset": -19.262887,
+        "adcScale": 0.076, "adcOffset": 2038.0,
+        "phiOffset": -0.023
+      }
+    }
+  ]
+}

@@ -7,6 +7,7 @@
 #include "CStateVectorData.hpp"
 #include "CIMUData.hpp"
 #include "CIMUDataCalibrated.hpp"
+#include "CCalibrationData.hpp"
 #include "CCalibration.hpp"
 #include "CStateEstimation.hpp"
 #include "CController.hpp"
@@ -14,7 +15,7 @@
 class CControlComp : public IRunnable
 {
 public:
-    CControlComp();
+    explicit CControlComp(const CCalibrationData& pCalibrationData);
     void init() override;
     void run() override;
 
@@ -28,6 +29,7 @@ private:
     CIMUDataCalibrated mImu2CalibData;
     uint16_t mADCVal;
     CHardware mHardware;
+    CCalibrationData mCalibrationData;
     CCalibration mCalibration;
     CStateEstimation mStateEstimation;
     CController mController;

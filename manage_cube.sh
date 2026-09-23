@@ -5,6 +5,7 @@ PORT="48000"
 USERNAME="debian"
 HOMEDIR="/home/debian/"
 APPNAME="balancing_cube_demo_app"
+CONFIG_PATH="config/cube_calibration.json"
 BUILD_DIR_DEBUG="debug"
 BUILD_DIR_RELEASE="release"
 BUILD_DIR_NATIVE="build_native"
@@ -105,6 +106,10 @@ run_debug_bbb() {
         echo "Failed to copy file to BBB"
         exit 1
     fi
+    if ! file2BBB "$CONFIG_PATH"; then
+        echo "Failed to copy config file to BBB"
+        exit 1
+    fi
     # shellcheck disable=SC2029
     ssh -t -p "${PORT}" "$USERNAME"@"$HOSTNAME" "sudo -n ${HOMEDIR}${APPNAME}"
 }
@@ -126,6 +131,10 @@ run_release_bbb() {
     fi
     if ! file2BBB "$RELEASE_PATH_BBB"; then
         echo "Failed to copy file to BBB"
+        exit 1
+    fi
+    if ! file2BBB "$CONFIG_PATH"; then
+        echo "Failed to copy config file to BBB"
         exit 1
     fi
     # shellcheck disable=SC2029
@@ -153,6 +162,10 @@ start_debugger_bbb() {
     fi
     if ! file2BBB "$DEBUG_PATH_BBB"; then
         echo "Failed to copy file to BBB"
+        exit 1
+    fi
+    if ! file2BBB "$CONFIG_PATH"; then
+        echo "Failed to copy config file to BBB"
         exit 1
     fi
     # shellcheck disable=SC2029

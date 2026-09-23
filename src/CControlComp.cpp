@@ -18,9 +18,10 @@ using namespace std;
 extern CContainer myContainer;
 extern atomic<bool> runvar;
 
-CControlComp::CControlComp():
+CControlComp::CControlComp(const CCalibrationData& pCalibrationData):
             mTimer(T_A),
-            mCalibration(CUBE_CONFIG),
+            mCalibrationData(pCalibrationData),
+            mCalibration(pCalibrationData),
             mStateEstimation(ALPHA, T_A),
             mController(K, MAX_TM)
 {
@@ -93,7 +94,7 @@ void CControlComp::run()
 
         CStateVectorData stateData;
         stateData = mStateData;
-        stateData.mPhi_C -= CUBE_CONFIG.mPhiOffset;
+        stateData.mPhi_C -= mCalibrationData.mPhiOffset;
         float TM = mController.update(stateData);
 
         if (!mHardware.setTorque(TM)) {

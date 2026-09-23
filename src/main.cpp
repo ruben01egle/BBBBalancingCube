@@ -3,20 +3,40 @@
 #include <chrono>
 #include <atomic>
 #include <string>
+#include <cstdlib>
 
 #include "CContainer.hpp"
 #include "CCommComp.hpp"
 #include "CControlComp.hpp"
 #include "CThread.hpp"
 #include "CErrorReporter.hpp"
+#include "CCubeConfigLoader.hpp"
+#include "CCalibrationData.hpp"
 
 using namespace std;
 
 CContainer myContainer;
 atomic<bool> runvar{true};
 
-int main(){
+int main(int argc, char** argv){
 	cout << "main running" << endl;
+
+	string configPath;
+	if (argc > 1) {
+		configPath = argv[1];
+	} else if (const char* envPath = getenv("CUBE_CONFIG_PATH")) {
+		configPath = envPath;
+	} else {
+		configPath = CCubeConfigLoader::defaultConfigPath();
+	}
+
+	CCalibrationData calibration;
+	int cubeId = -1;
+	if (!CCubeConfigLoader::loadForThisHost(configPath, calibration, cubeId)) {
+		cerr << "Failed to load cube calibration from '" << configPath << "'. Refusing to start." << endl;
+		return 1;
+	}
+	cout << "Loaded calibration for cube " << cubeId << " from '" << configPath << "'" << endl;
 
 	CCommComp Comm;
 	CThread CommThread(&Comm, CThread::PRIORITY_ABOVE_NORM);
@@ -29,7 +49,7 @@ int main(){
 		this_thread::sleep_for(chrono::seconds(1));
 	}
 
-	CControlComp Control;
+	CControlComp Control(calibration);
 	CThread ControlThread(&Control, CThread::EPriority::PRIORITY_REALTIME);
 	if (!ControlThread.start()) {
 		REPORT_ERROR("main: failed to start ControlThread");
