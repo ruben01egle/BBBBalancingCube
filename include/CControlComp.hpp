@@ -15,12 +15,13 @@
 class CControlComp : public IRunnable
 {
 public:
-    explicit CControlComp(const CCalibrationData& pCalibrationData);
+    explicit CControlComp(const CCalibrationData& pCalibrationData, bool pCalibrateMode = false);
     void init() override;
     void run() override;
 
 private:
     bool mInitSuccesfull;
+    bool mCalibrateMode;
     CLoopTimer mTimer;
     CStateVectorData mStateData;
     CIMUData mImu1Data;

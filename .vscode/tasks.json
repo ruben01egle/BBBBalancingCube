@@ -2,25 +2,6 @@
     "version": "2.0.0",
     "tasks": [
       {
-          "label": "build native",
-          "type": "shell",
-          "command": "./manage_cube.sh --build-release-native",
-          "args": [],
-          "problemMatcher": ["$gcc"],
-          "group": {
-              "kind": "build",
-              "isDefault": true
-          }
-      },
-      {
-        "label": "run native",
-        "type": "shell",
-        "command": "./manage_cube.sh --run-release-native",
-        "presentation": {
-          "reveal": "always"
-        }
-      },
-      {
         "label": "build for bbb",
         "type": "shell",
         "command": "./manage_cube.sh --build-release-bbb",

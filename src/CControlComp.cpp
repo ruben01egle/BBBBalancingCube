@@ -18,7 +18,10 @@ using namespace std;
 extern CContainer myContainer;
 extern atomic<bool> runvar;
 
-CControlComp::CControlComp(const CCalibrationData& pCalibrationData):
+static constexpr int64_t CALIBRATION_DURATION_US = 10'000'000;
+
+CControlComp::CControlComp(const CCalibrationData& pCalibrationData, bool pCalibrateMode):
+            mCalibrateMode(pCalibrateMode),
             mTimer(T_A),
             mCalibrationData(pCalibrationData),
             mCalibration(pCalibrationData),
@@ -33,6 +36,12 @@ void CControlComp::init()
     cout << "ControlComp init" << endl;
     if (!mHardware.init()) {
         REPORT_ERROR("ControlComp: hardware init failed");
+        return;
+    }
+    // In calibrate mode only raw sensor data is needed: the motor is never
+    // enabled (no torque) and the filters do not need to settle.
+    if (mCalibrateMode) {
+        mInitSuccesfull = true;
         return;
     }
     if (!mHardware.enableMotor()){
@@ -69,6 +78,7 @@ void CControlComp::run()
     if (!mInitSuccesfull) {
         mHardware.disableMotor();
         cerr << "ControlComp init failed - exiting run" << endl;
+        runvar.store(false);
         return;
     }
 
@@ -83,24 +93,31 @@ void CControlComp::run()
             runvar.store(false);
             break;
         }
-        mCalibration.calibrate(mImu1Data, mImu2Data, mADCVal, mImu1CalibData, mImu2CalibData, mStateData.mDotPsi);
-        
-        mStateEstimation.estimateState(mImu1CalibData, mImu2CalibData, mStateData);
-        
-        if (abs(mStateData.mPhi_C) > 0.25){
-            cout << "Cube out of range" << endl;
-            runvar.store(false);
-        }
 
-        CStateVectorData stateData;
-        stateData = mStateData;
-        stateData.mPhi_C -= mCalibrationData.mPhiOffset;
-        float TM = mController.update(stateData);
+        float TM = 0.0f;
+        if (mCalibrateMode) {
+            if (currentMicros >= CALIBRATION_DURATION_US) {
+                runvar.store(false);
+            }
+        } else {
+            mCalibration.calibrate(mImu1Data, mImu2Data, mADCVal, mImu1CalibData, mImu2CalibData, mStateData.mDotPsi);
+            mStateEstimation.estimateState(mImu1CalibData, mImu2CalibData, mStateData);
 
-        if (!mHardware.setTorque(TM)) {
-            REPORT_ERROR("ControlComp: setTorque failed");
-            runvar.store(false);
-            break;
+            if (abs(mStateData.mPhi_C) > 0.25){
+                cout << "Cube out of range" << endl;
+                runvar.store(false);
+            }
+
+            CStateVectorData stateData;
+            stateData = mStateData;
+            stateData.mPhi_C -= mCalibrationData.mPhiOffset;
+            TM = mController.update(stateData);
+
+            if (!mHardware.setTorque(TM)) {
+                REPORT_ERROR("ControlComp: setTorque failed");
+                runvar.store(false);
+                break;
+            }
         }
         
         myContainer.writeData(
@@ -117,7 +134,9 @@ void CControlComp::run()
 
         mTimer.sleepUntilNext();
     }
-    mHardware.setTorque(0);
+    if (!mCalibrateMode) {
+        mHardware.setTorque(0);
+    }
     mHardware.disableMotor();
     cout << "Control end" << endl;
 }

@@ -22,12 +22,21 @@ int main(int argc, char** argv){
 	cout << "main running" << endl;
 
 	string configPath;
-	if (argc > 1) {
-		configPath = argv[1];
-	} else if (const char* envPath = getenv("CUBE_CONFIG_PATH")) {
-		configPath = envPath;
-	} else {
-		configPath = CCubeConfigLoader::defaultConfigPath();
+	bool calibrateMode = false;
+	for (int i = 1; i < argc; ++i) {
+		string arg = argv[i];
+		if (arg == "--calibrate") {
+			calibrateMode = true;
+		} else if (configPath.empty()) {
+			configPath = arg;
+		}
+	}
+	if (configPath.empty()) {
+		if (const char* envPath = getenv("CUBE_CONFIG_PATH")) {
+			configPath = envPath;
+		} else {
+			configPath = CCubeConfigLoader::defaultConfigPath();
+		}
 	}
 
 	CCalibrationData calibration;
@@ -49,17 +58,24 @@ int main(int argc, char** argv){
 		this_thread::sleep_for(chrono::seconds(1));
 	}
 
-	CControlComp Control(calibration);
+	CControlComp Control(calibration, calibrateMode);
 	CThread ControlThread(&Control, CThread::EPriority::PRIORITY_REALTIME);
 	if (!ControlThread.start()) {
 		REPORT_ERROR("main: failed to start ControlThread");
 	}
 
-	cout << "Type a random character to kill program:" << endl;
-	
-	char in;
-    cin >> in;
-	runvar.store(false);
+	if (calibrateMode) {
+		// Control thread ends runvar on its own after the calibration time
+		while (runvar.load()) {
+			this_thread::sleep_for(chrono::milliseconds(100));
+		}
+	} else {
+		cout << "Type a random character to kill program:" << endl;
+
+		char in;
+		cin >> in;
+		runvar.store(false);
+	}
 
 	ControlThread.join();
 	myContainer.signalReader();

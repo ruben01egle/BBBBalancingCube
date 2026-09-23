@@ -35,6 +35,8 @@ help() {
     echo "  -sdbbb, --start-debugger-bbb    Start the debugger for the BeagleBone Black (BBB) application"
     echo "  -sshkey, --copy-sshkey          Copy SSH key to the BeagleBone Black for password-less SSH"
     echo "  -stopbbb, --stop-app-bbb        Stop the app if it is running on BeagleBone Black (BBB)"
+    echo "  -calbbb, --calibrate-bbb        Run the deployed app on the BBB in calibration mode (no torque, ends after 10s)"
+    echo "  -cfgbbb, --copy-config-bbb      Copy the calibration config file to the BBB"
     echo
     echo "Example usage:"
     echo "  $0 --build-debug-native        # Build locally in Debug mode"
@@ -189,6 +191,18 @@ stop_bbb() {
     fi
 }
 
+calibrate_bbb() {
+    echo "Running deployed app in calibration mode on bbb"
+    # shellcheck disable=SC2029
+    ssh -p "${PORT}" "$USERNAME"@"$HOSTNAME" "sudo -n ${HOMEDIR}${APPNAME} --calibrate"
+}
+
+copy_config_bbb() {
+    if ! file2BBB "$CONFIG_PATH"; then
+        echo "Failed to copy config file to BBB"
+        exit 1
+    fi
+}
 
 if [ $# -eq 0 ]; then
     echo "No arguments found. Please chose an action."
@@ -244,6 +258,12 @@ while [ $# -gt 0 ]; do
             ;;
         -stopbbb|--stop-app-bbb)
             stop_bbb
+            ;;
+        -calbbb|--calibrate-bbb)
+            calibrate_bbb
+            ;;
+        -cfgbbb|--copy-config-bbb)
+            copy_config_bbb
             ;;
         -*)
             echo "Unknown option: $1"

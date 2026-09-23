@@ -10,7 +10,7 @@
         "imu2AccelScaleX": 1.0, "imu2AccelScaleY": 1.0,
         "imu2AccelOffsetX": 0.0, "imu2AccelOffsetY": 0.0,
         "imu2GyroScale": 1.0, "imu2GyroOffset": 0.0,
-        "adcScale": 1.0, "adcOffset": 0.0,
+        "adcScale": 0.076, "adcOffset": 2048.0,
         "phiOffset": 0.0
       }
     },
@@ -24,7 +24,7 @@
         "imu2AccelScaleX": 1.0, "imu2AccelScaleY": 1.0,
         "imu2AccelOffsetX": 0.0, "imu2AccelOffsetY": 0.0,
         "imu2GyroScale": 1.0, "imu2GyroOffset": 0.0,
-        "adcScale": 1.0, "adcOffset": 0.0,
+        "adcScale": 0.076, "adcOffset": 2048.0,
         "phiOffset": 0.0
       }
     },
@@ -38,7 +38,7 @@
         "imu2AccelScaleX": 1.0, "imu2AccelScaleY": 1.0,
         "imu2AccelOffsetX": 0.0, "imu2AccelOffsetY": 0.0,
         "imu2GyroScale": 1.0, "imu2GyroOffset": 0.0,
-        "adcScale": 1.0, "adcOffset": 0.0,
+        "adcScale": 0.076, "adcOffset": 2048.0,
         "phiOffset": 0.0
       }
     },
@@ -52,7 +52,7 @@
         "imu2AccelScaleX": 1.0, "imu2AccelScaleY": 1.0,
         "imu2AccelOffsetX": 0.0, "imu2AccelOffsetY": 0.0,
         "imu2GyroScale": 1.0, "imu2GyroOffset": 0.0,
-        "adcScale": 1.0, "adcOffset": 0.0,
+        "adcScale": 0.076, "adcOffset": 2048.0,
         "phiOffset": 0.0
       }
     },
@@ -66,7 +66,7 @@
         "imu2AccelScaleX": 1.0, "imu2AccelScaleY": 1.0,
         "imu2AccelOffsetX": 0.0, "imu2AccelOffsetY": 0.0,
         "imu2GyroScale": 1.0, "imu2GyroOffset": 0.0,
-        "adcScale": 1.0, "adcOffset": 0.0,
+        "adcScale": 0.076, "adcOffset": 2048.0,
         "phiOffset": 0.0
       }
     },
@@ -80,7 +80,7 @@
         "imu2AccelScaleX": 1.0, "imu2AccelScaleY": 1.0,
         "imu2AccelOffsetX": 0.0, "imu2AccelOffsetY": 0.0,
         "imu2GyroScale": 1.0, "imu2GyroOffset": 0.0,
-        "adcScale": 1.0, "adcOffset": 0.0,
+        "adcScale": 0.076, "adcOffset": 2048.0,
         "phiOffset": 0.0
       }
     },
@@ -94,7 +94,7 @@
         "imu2AccelScaleX": 1.0, "imu2AccelScaleY": 1.0,
         "imu2AccelOffsetX": 0.0, "imu2AccelOffsetY": 0.0,
         "imu2GyroScale": 1.0, "imu2GyroOffset": 0.0,
-        "adcScale": 1.0, "adcOffset": 0.0,
+        "adcScale": 0.076, "adcOffset": 2048.0,
         "phiOffset": 0.0
       }
     },
@@ -108,7 +108,7 @@
         "imu2AccelScaleX": 1.0, "imu2AccelScaleY": 1.0,
         "imu2AccelOffsetX": 0.0, "imu2AccelOffsetY": 0.0,
         "imu2GyroScale": 1.0, "imu2GyroOffset": 0.0,
-        "adcScale": 1.0, "adcOffset": 0.0,
+        "adcScale": 0.076, "adcOffset": 2048.0,
         "phiOffset": 0.0
       }
     },
@@ -122,7 +122,7 @@
         "imu2AccelScaleX": 1.0, "imu2AccelScaleY": 1.0,
         "imu2AccelOffsetX": 0.0, "imu2AccelOffsetY": 0.0,
         "imu2GyroScale": 1.0, "imu2GyroOffset": 0.0,
-        "adcScale": 1.0, "adcOffset": 0.0,
+        "adcScale": 0.076, "adcOffset": 2048.0,
         "phiOffset": 0.0
       }
     },
@@ -136,7 +136,7 @@
         "imu2AccelScaleX": 1.0, "imu2AccelScaleY": 1.0,
         "imu2AccelOffsetX": 0.0, "imu2AccelOffsetY": 0.0,
         "imu2GyroScale": 1.0, "imu2GyroOffset": 0.0,
-        "adcScale": 1.0, "adcOffset": 0.0,
+        "adcScale": 0.076, "adcOffset": 2048.0,
         "phiOffset": 0.0
       }
     },
@@ -150,7 +150,7 @@
         "imu2AccelScaleX": 1.0, "imu2AccelScaleY": 1.0,
         "imu2AccelOffsetX": 0.0, "imu2AccelOffsetY": 0.0,
         "imu2GyroScale": 1.0, "imu2GyroOffset": 0.0,
-        "adcScale": 1.0, "adcOffset": 0.0,
+        "adcScale": 0.076, "adcOffset": 2048.0,
         "phiOffset": 0.0
       }
     },
@@ -164,7 +164,7 @@
         "imu2AccelScaleX": 1.0, "imu2AccelScaleY": 1.0,
         "imu2AccelOffsetX": 0.0, "imu2AccelOffsetY": 0.0,
         "imu2GyroScale": 1.0, "imu2GyroOffset": 0.0,
-        "adcScale": 1.0, "adcOffset": 0.0,
+        "adcScale": 0.076, "adcOffset": 2048.0,
         "phiOffset": 0.0
       }
     },
@@ -178,7 +178,7 @@
         "imu2AccelScaleX": 1.0, "imu2AccelScaleY": 1.0,
         "imu2AccelOffsetX": 0.0, "imu2AccelOffsetY": 0.0,
         "imu2GyroScale": 1.0, "imu2GyroOffset": 0.0,
-        "adcScale": 1.0, "adcOffset": 0.0,
+        "adcScale": 0.076, "adcOffset": 2048.0,
         "phiOffset": 0.0
       }
     },
