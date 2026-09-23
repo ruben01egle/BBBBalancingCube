@@ -18,8 +18,6 @@ using namespace std;
 extern CContainer myContainer;
 extern atomic<bool> runvar;
 
-static constexpr int64_t CALIBRATION_DURATION_US = 10'000'000;
-
 CControlComp::CControlComp(const CCalibrationData& pCalibrationData, bool pCalibrateMode):
             mCalibrateMode(pCalibrateMode),
             mTimer(T_A),

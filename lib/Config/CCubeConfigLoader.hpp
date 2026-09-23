@@ -18,6 +18,15 @@ public:
                                  CCalibrationData& pOutCalibration,
                                  int& pOutCubeId);
 
+    // Finds this host's entry like loadForThisHost and overwrites only its 12 imu1/imu2
+    // scale/offset fields with the values from pNewCalibration (ADC and phi offset are left
+    // untouched). If pOutOldCalibration is given it receives the previous imu values. The file
+    // is rewritten in place (keeps owner/permissions when running under sudo). Returns false
+    // and reports an error on any failure, leaving the file unmodified.
+    static bool updateImuCalibrationForThisHost(const std::string& pConfigPath,
+                                                const CCalibrationData& pNewCalibration,
+                                                CCalibrationData* pOutOldCalibration = nullptr);
+
     // Resolves the default config path: the directory containing the currently
     // running executable (via /proc/self/exe) joined with pFileName. Falls back to
     // pFileName relative to the current working directory if /proc/self/exe cannot

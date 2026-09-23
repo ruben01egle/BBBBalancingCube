@@ -35,7 +35,10 @@ help() {
     echo "  -sdbbb, --start-debugger-bbb    Start the debugger for the BeagleBone Black (BBB) application"
     echo "  -sshkey, --copy-sshkey          Copy SSH key to the BeagleBone Black for password-less SSH"
     echo "  -stopbbb, --stop-app-bbb        Stop the app if it is running on BeagleBone Black (BBB)"
-    echo "  -calbbb, --calibrate-bbb        Run the deployed app on the BBB in calibration mode (no torque, ends after 10s)"
+    echo "  -calbbb, --calibrate-bbb        Run the deployed app on the BBB in calibration mode (no torque, streams raw data, ends after 10s)"
+    echo "  -autocalbbb, --auto-calibrate-bbb  Run the deployed app on the BBB and let it calibrate itself and update its config (ends after 10s)"
+    echo "  -pullcfg, --pull-config-bbb     Copy the calibration config file from the BBB to the host (do this before deploying again,"
+    echo "                                  since the run/debug options overwrite the BBB config with the local one)"
     echo "  -cfgbbb, --copy-config-bbb      Copy the calibration config file to the BBB"
     echo
     echo "Example usage:"
@@ -197,6 +200,17 @@ calibrate_bbb() {
     ssh -p "${PORT}" "$USERNAME"@"$HOSTNAME" "sudo -n ${HOMEDIR}${APPNAME} --calibrate"
 }
 
+auto_calibrate_bbb() {
+    echo "Running deployed app in auto-calibration mode on bbb"
+    # shellcheck disable=SC2029
+    ssh -p "${PORT}" "$USERNAME"@"$HOSTNAME" "sudo -n ${HOMEDIR}${APPNAME} --auto-calibrate"
+}
+
+pull_config_bbb() {
+    echo "Copying config file from BBB to $CONFIG_PATH"
+    scp -P "${PORT}" "$USERNAME"@"$HOSTNAME":"$HOMEDIR$(basename "$CONFIG_PATH")" "$CONFIG_PATH"
+}
+
 copy_config_bbb() {
     if ! file2BBB "$CONFIG_PATH"; then
         echo "Failed to copy config file to BBB"
@@ -261,6 +275,12 @@ while [ $# -gt 0 ]; do
             ;;
         -calbbb|--calibrate-bbb)
             calibrate_bbb
+            ;;
+        -autocalbbb|--auto-calibrate-bbb)
+            auto_calibrate_bbb
+            ;;
+        -pullcfg|--pull-config-bbb)
+            pull_config_bbb
             ;;
         -cfgbbb|--copy-config-bbb)
             copy_config_bbb

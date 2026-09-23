@@ -4,9 +4,11 @@
 #include <atomic>
 #include <string>
 #include <cstdlib>
+#include <memory>
 
 #include "CContainer.hpp"
 #include "CCommComp.hpp"
+#include "CCalibComp.hpp"
 #include "CControlComp.hpp"
 #include "CThread.hpp"
 #include "CErrorReporter.hpp"
@@ -23,10 +25,15 @@ int main(int argc, char** argv){
 
 	string configPath;
 	bool calibrateMode = false;
+	bool autoCalibrateMode = false;
 	for (int i = 1; i < argc; ++i) {
 		string arg = argv[i];
 		if (arg == "--calibrate") {
 			calibrateMode = true;
+		} else if (arg == "--auto-calibrate") {
+			// computes and stores the calibration on the cube itself, implies --calibrate
+			calibrateMode = true;
+			autoCalibrateMode = true;
 		} else if (configPath.empty()) {
 			configPath = arg;
 		}
@@ -47,15 +54,28 @@ int main(int argc, char** argv){
 	}
 	cout << "Loaded calibration for cube " << cubeId << " from '" << configPath << "'" << endl;
 
-	CCommComp Comm;
-	CThread CommThread(&Comm, CThread::PRIORITY_ABOVE_NORM);
-	if (!CommThread.start()) {
-		REPORT_ERROR("main: failed to start CommThread");
+	// Comm thread streams the data to a client, in auto-calibrate mode the calib thread
+	// consumes the data instead
+	std::shared_ptr<IRunnable> consumer;
+
+	if (autoCalibrateMode) {
+		consumer = std::make_shared<CCalibComp>(configPath);
+	}
+	else {
+		consumer = std::make_shared<CCommComp>();
+	}
+	CThread ConsumerThread(consumer.get(), CThread::PRIORITY_ABOVE_NORM);
+
+	if (!ConsumerThread.start()) {
+		REPORT_ERROR("main: failed to start ConsumerThread");
 	}
 
-	for (uint8_t i = 0; i < 3; ++i) {
-		cout << "Starting ControlComp in " << int(3-i) << endl;
-		this_thread::sleep_for(chrono::seconds(1));
+	if (!autoCalibrateMode) {
+		// gives a client time to connect before the data starts
+		for (uint8_t i = 0; i < 3; ++i) {
+			cout << "Starting ControlComp in " << int(3-i) << endl;
+			this_thread::sleep_for(chrono::seconds(1));
+		}
 	}
 
 	CControlComp Control(calibration, calibrateMode);
@@ -79,7 +99,7 @@ int main(int argc, char** argv){
 
 	ControlThread.join();
 	myContainer.signalReader();
-	CommThread.join();
+	ConsumerThread.join();
 
 	cout << "main end" << endl;
 	return 0;

@@ -64,6 +64,20 @@ namespace Cube
         .accelLP = CMPU9250::A_LP_20HZ
     };
 
-    // Calib cfg
+    // IMU sensitivities from the MPU-9250 datasheet, indexed by the CMPU9250 full-scale enums
+    // (FS_RANGE_250/500/1000/2000 and FS_RANGE_2g/4g/8g/16g). Keep in sync with tools/calib.py.
+    constexpr std::array<double, 4> GYRO_LSB_PER_DPS = {131.0, 65.5, 32.8, 16.4};
+    constexpr std::array<double, 4> ACCEL_LSB_PER_G = {16384.0, 8192.0, 4096.0, 2048.0};
+    constexpr double GRAVITY = 9.81;
+    constexpr double PI = 3.14159265359;
+
+    // Raw-count -> SI factors and the expected raw 1 g reading for the configured IMU_SETUP
+    constexpr double GYRO_SCALE_RAD_S = PI / 180.0 / GYRO_LSB_PER_DPS[IMU_SETUP.gyroScale];
+    constexpr double ACCEL_SCALE_MS2 = GRAVITY / ACCEL_LSB_PER_G[IMU_SETUP.accelScale];
+    constexpr double ACCEL_RAW_1G = ACCEL_LSB_PER_G[IMU_SETUP.accelScale];
+
+    static constexpr int64_t CALIBRATION_DURATION_US = 10'000'000;
+
+    // Controller cfg
     constexpr std::array<float, 3> K = {-2.1431F, -0.2186F, -0.0013F};
 }
