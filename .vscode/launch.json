@@ -1,63 +1,63 @@
 {
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "name": "(gdb) Launch",
-      "type": "cppdbg",
-      "request": "launch",
-      "program": "${workspaceFolder}/build_native/debug/balancing_cube_app",
-      "args": [],
-      "stopAtEntry": false,
-      "cwd": "${workspaceFolder}",
-      "environment": [],
-      "externalConsole": false,
-      "MIMode": "gdb",
-      "miDebuggerPath": "/usr/bin/gdb",
-      "preLaunchTask": "start debugger native",
-      "setupCommands": [
-        {
-          "description": "Enable pretty-printing for gdb",
-          "text": "-enable-pretty-printing",
-          "ignoreFailures": true
-        },
-        {
-          "description": "Set Disassembly Flavor to Intel",
-          "text": "-gdb-set disassembly-flavor intel",
-          "ignoreFailures": true
-        }
-      ]
-    },
-    {
-      "name": "Remote GDB Debug",
-      "type": "cppdbg",
-      "request": "launch",
-      "program": "${workspaceFolder}/build_BBB/debug/balancing_cube_app",
-      "args": [],
-      "stopAtEntry": false,
-      "cwd": "${workspaceFolder}",
-      "MIMode": "gdb",
-      "setupCommands": [
-        {
-          "description": "Enable pretty-printing for gdb",
-          "text": "-enable-pretty-printing",
-          "ignoreFailures": true
-        }
-      ],
-      "miDebuggerServerAddress": "localhost:2345",
-      "miDebuggerPath": "/usr/bin/gdb-multiarch",
-      "preLaunchTask": "start debugger bbb",
-      "externalConsole": true,
-      "logging": {
-        "moduleLoad": false
-      }
-    },
-    {
-      "name": "C/C++ Runner: Debug Session",
-      "type": "lldb",
-      "request": "launch",
-      "args": [],
-      "cwd": "/Users/tobiasbaas/SynologyDrive/Lehrveranstaltungen/6 Mechatronische Systeme/Würfellabor/Workspace/BBBBalancingCube",
-      "program": "/Users/tobiasbaas/SynologyDrive/Lehrveranstaltungen/6 Mechatronische Systeme/Würfellabor/Workspace/BBBBalancingCube/build/Debug/outDebug"
-    }
-  ]
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "(gdb) Launch",
+			"type": "cppdbg",
+			"request": "launch",
+			"program": "${workspaceFolder}/build_native/debug/balancing_cube_demo_app",
+			"args": [],
+			"stopAtEntry": false,
+			"cwd": "${workspaceFolder}",
+			"environment": [],
+			"externalConsole": false,
+			"MIMode": "gdb",
+			"miDebuggerPath": "/usr/bin/gdb",
+			"preLaunchTask": "start debugger native",
+			"setupCommands": [
+			{
+				"description": "Enable pretty-printing for gdb",
+				"text": "-enable-pretty-printing",
+				"ignoreFailures": true
+			},
+			{
+				"description": "Set Disassembly Flavor to Intel",
+				"text": "-gdb-set disassembly-flavor intel",
+				"ignoreFailures": true
+			}
+			]
+		},
+		{
+			"name": "Remote GDB Debug",
+			"type": "cppdbg",
+			"request": "launch",
+			"program": "${workspaceFolder}/build_BBB/debug/balancing_cube_demo_app",
+			"args": [],
+			"stopAtEntry": false,
+			"cwd": "${workspaceFolder}",
+			"MIMode": "gdb",
+			"setupCommands": [
+			{
+				"description": "Enable pretty-printing for gdb",
+				"text": "-enable-pretty-printing",
+				"ignoreFailures": true
+			}
+			],
+			"miDebuggerServerAddress": "localhost:2345",
+			"miDebuggerPath": "/usr/bin/gdb-multiarch",
+			"preLaunchTask": "start debugger bbb",
+			"externalConsole": true,
+			"logging": {
+			"moduleLoad": false
+			}
+		},
+		{
+			"name": "(lldb) Launch (macOS)",
+			"type": "lldb",
+			"request": "launch",
+			"args": [],
+			"cwd": "${workspaceFolder}",
+			"program": "${workspaceFolder}/build/Debug/outDebug"
+		}
+	]
 }

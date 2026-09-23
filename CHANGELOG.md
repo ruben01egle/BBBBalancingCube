@@ -86,7 +86,7 @@ A set of related sign flips, all aimed at making the physical hardware conventio
 ## 5. Naming/build/deploy cleanup
 
 - Broad `.h` → `.hpp` rename across headers, switched from `#ifndef` include guards to `#pragma once` throughout.
-- App binary name is now a **fixed** `balancing_cube_app` (makefile, `.vscode/launch.json`) instead of being derived from the checkout's directory basename — avoids the binary name changing if someone clones the repo under a different folder name.
+- App binary name is now a **fixed** `balancing_cube_demo_app` (makefile, `.vscode/launch.json`) instead of being derived from the checkout's directory basename — avoids the binary name changing if someone clones the repo under a different folder name.
 - `manage_cube.sh` / `README.md` updated for a new BBB image: SSH login user changed from `root` to `debian`, home dir path updated, and the remote debugger launch now goes through `sudo gdbserver` (since the login user is no longer root).
 - Removed obsolete `START.sh`/`STOP.sh` (raw `/sys/class/gpio/gpio66` sysfs toggle scripts) — superseded by the new `GPIO/CGPIOMMAP` driver.
 

@@ -4,7 +4,7 @@ HOSTNAME="localhost"
 PORT="48000"
 USERNAME="debian"
 HOMEDIR="/home/debian/"
-APPNAME="balancing_cube_app"
+APPNAME="balancing_cube_demo_app"
 BUILD_DIR_DEBUG="debug"
 BUILD_DIR_RELEASE="release"
 BUILD_DIR_NATIVE="build_native"
@@ -33,6 +33,7 @@ help() {
     echo "  -sdn, --start-debugger-native   Start the debugger for the local (native) application"
     echo "  -sdbbb, --start-debugger-bbb    Start the debugger for the BeagleBone Black (BBB) application"
     echo "  -sshkey, --copy-sshkey          Copy SSH key to the BeagleBone Black for password-less SSH"
+    echo "  -stopbbb, --stop-app-bbb        Stop the app if it is running on BeagleBone Black (BBB)"
     echo
     echo "Example usage:"
     echo "  $0 --build-debug-native        # Build locally in Debug mode"
@@ -163,6 +164,18 @@ sshkey2BBB() {
     ssh-copy-id -p "$PORT" "$USERNAME"@"$HOSTNAME"
 }
 
+stop_bbb() {
+    echo "Checking for running $APPNAME on BBB"
+    # shellcheck disable=SC2029
+    if ssh -p "${PORT}" "$USERNAME"@"$HOSTNAME" "pgrep -x ${APPNAME} > /dev/null"; then
+        echo "$APPNAME is running on BBB, stopping it"
+        # shellcheck disable=SC2029
+        ssh -p "${PORT}" "$USERNAME"@"$HOSTNAME" "sudo -n pkill -x ${APPNAME}"
+    else
+        echo "$APPNAME is not running on BBB"
+    fi
+}
+
 
 if [ $# -eq 0 ]; then
     echo "No arguments found. Please chose an action."
@@ -215,6 +228,9 @@ while [ $# -gt 0 ]; do
             ;;
         -sshkey|--copy-sshkey)
             sshkey2BBB
+            ;;
+        -stopbbb|--stop-app-bbb)
+            stop_bbb
             ;;
         -*)
             echo "Unknown option: $1"

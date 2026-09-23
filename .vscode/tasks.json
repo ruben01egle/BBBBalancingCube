@@ -75,6 +75,14 @@
         }
       },
       {
+        "label": "stop app on bbb",
+        "type": "shell",
+        "command": "./manage_cube.sh --stop-app-bbb",
+        "presentation": {
+          "reveal": "always"
+        }
+      },
+      {
         "label": "start debugger native",
         "type": "shell",
         "command": "./manage_cube.sh --start-debugger-native",

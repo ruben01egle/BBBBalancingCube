@@ -24,7 +24,7 @@ def main():
         print("Could not connect to server.")
         return
 
-    plotter = PlotManager(mode="state")
+    plotter = PlotManager()
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     file_path = Path(f"ExperimentsData/experiment_data{timestamp}.csv")

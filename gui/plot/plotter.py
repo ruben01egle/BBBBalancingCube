@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QGridLayout
+from PyQt5.QtWidgets import QTabWidget
 from .imu_plot import IMUPlot
 from .imu_calib_plot import IMUCalibPlot
 from .state_plot import StatePlot
@@ -10,22 +10,17 @@ PLOT_TYPES = {
 }
 
 class PlotManager:
-    def __init__(self, mode):
-        self.widget = QWidget()
-        self.layout = QGridLayout()
-        self.widget.setLayout(self.layout)
+    def __init__(self):
+        self.tabs = QTabWidget()
         self.plots = []
 
-        parts = mode.lower().split('+')
-        for col, part in enumerate(parts):
-            if part not in PLOT_TYPES:
-                raise ValueError(f"Unknown mode: {mode}")
-            plot = PLOT_TYPES[part]()
+        for name, plot_cls in PLOT_TYPES.items():
+            plot = plot_cls()
             self.plots.append(plot)
-            self.layout.addWidget(plot.get_widget(), 0, col)
+            self.tabs.addTab(plot.get_widget(), name)
 
     def get_widget(self):
-        return self.widget
+        return self.tabs
 
     def update(self, ccontent):
         for plot in self.plots:

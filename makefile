@@ -1,4 +1,4 @@
-APP_NAME = balancing_cube_app
+APP_NAME = balancing_cube_demo_app
 # Default to native build
 TARGET_PLATFORM ?= bbb
 
